@@ -1,0 +1,1458 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>O cérebro que salva vidas — morte encefálica e doação de órgãos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<style>
+  :root {
+    --bg:       oklch(0.155 0.012 240);
+    --bg-2:     oklch(0.195 0.013 240);
+    --panel:    oklch(0.21 0.014 240);
+    --line:     oklch(0.32 0.014 240);
+    --line-2:   oklch(0.26 0.012 240);
+    --ink:      oklch(0.945 0.012 85);
+    --ink-2:    oklch(0.80 0.012 85);
+    --ink-3:    oklch(0.62 0.012 85);
+    --accent:   oklch(0.83 0.11 195);
+    --accent-2: oklch(0.78 0.12 50);
+    --danger:   oklch(0.70 0.16 25);
+    --good:     oklch(0.80 0.13 155);
+    --serif: "Instrument Serif", "Times New Roman", serif;
+    --sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: "";
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      linear-gradient(to right, oklch(0.95 0.01 85 / 0.022) 1px, transparent 1px),
+      linear-gradient(to bottom, oklch(0.95 0.01 85 / 0.018) 1px, transparent 1px);
+    background-size: 96px 96px;
+    mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, #000 50%, transparent 100%);
+  }
+  body::after {
+    content: "";
+    position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    background: radial-gradient(ellipse 70% 60% at 20% 30%, oklch(0.83 0.11 195 / 0.06), transparent 60%),
+                radial-gradient(ellipse 50% 50% at 90% 80%, oklch(0.78 0.12 50 / 0.04), transparent 60%);
+  }
+
+  /* ===== nav ===== */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 32px;
+    backdrop-filter: blur(14px);
+    background: oklch(0.155 0.012 240 / 0.72);
+    border-bottom: 1px solid var(--line-2);
+  }
+  .brand { display: flex; align-items: baseline; gap: 14px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-2); white-space: nowrap; }
+  .brand .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); flex: 0 0 7px; }
+  .brand b { font-family: var(--serif); font-style: italic; font-weight: 400; text-transform: none; font-size: 19px; letter-spacing: 0; color: var(--ink); }
+  .brand .desc { color: var(--ink-3); }
+  @media (max-width: 1180px) { .brand .desc { display: none; } }
+  nav.index { display: flex; gap: 2px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; }
+  nav.index a {
+    color: var(--ink-3); text-decoration: none; padding: 8px 10px; border-radius: 2px;
+    transition: color 0.2s, background 0.2s;
+  }
+  nav.index a:hover { color: var(--ink); background: oklch(0.95 0.01 85 / 0.04); }
+  nav.index a.active { color: var(--accent); }
+  nav.index a .n { opacity: 0.5; margin-right: 5px; }
+  @media (max-width: 1320px) { nav.index a .n { display: none; } nav.index a { padding: 8px 8px; } }
+  @media (max-width: 1100px) { nav.index { font-size: 10px; } nav.index a { padding: 8px 6px; letter-spacing: 0.05em; } }
+  @media (max-width: 900px) { nav.index { display: none; } }
+
+  .progress {
+    position: fixed; top: 53px; left: 0; height: 1px;
+    background: linear-gradient(to right, var(--accent), oklch(0.83 0.11 195 / 0.3));
+    width: 0; z-index: 49;
+    transition: width 0.1s linear;
+  }
+
+  main { position: relative; z-index: 2; }
+
+  /* ===== HERO ===== */
+  .hero {
+    position: relative;
+    height: 100vh; min-height: 720px;
+    overflow: hidden;
+    padding-top: 54px;
+  }
+  #brain-canvas {
+    position: absolute; inset: 0;
+    cursor: grab;
+  }
+  .hero-overlay {
+    position: absolute; inset: 0; pointer-events: none;
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 80px 56px 40px;
+    z-index: 3;
+  }
+  .hero-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-3);
+  }
+  .hero-top .v { color: var(--ink-2); display: block; margin-top: 4px; letter-spacing: 0.18em; }
+  .hero-title {
+    pointer-events: none;
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--accent);
+    margin-bottom: 22px;
+    display: inline-flex; align-items: center; gap: 14px;
+  }
+  .hero-eyebrow .bar { width: 32px; height: 1px; background: var(--accent); display: inline-block; }
+  .hero-title h1 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(56px, 9.5vw, 144px);
+    line-height: 0.92; letter-spacing: -0.025em;
+    margin: 0;
+    color: var(--ink);
+    text-shadow: 0 0 60px oklch(0.155 0.012 240 / 0.7);
+  }
+  .hero-title h1 em { font-style: italic; color: var(--accent); font-weight: 400; }
+  .hero-title .sub {
+    margin: 28px auto 0;
+    max-width: 620px;
+    font-family: var(--sans); font-size: 16px; font-weight: 300;
+    color: var(--ink-2); line-height: 1.55;
+  }
+  .hero-bottom {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-3);
+  }
+  .hero-bottom .lab { display: flex; flex-direction: column; gap: 4px; }
+  .hero-bottom .lab b { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 20px; color: var(--ink); letter-spacing: 0; text-transform: none; }
+  .scroll-hint {
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    color: var(--ink-2);
+    pointer-events: auto;
+  }
+  .scroll-hint .line {
+    width: 1px; height: 36px;
+    background: linear-gradient(to bottom, transparent, var(--accent), transparent);
+    animation: hint 2.4s ease-in-out infinite;
+  }
+  @keyframes hint { 0%,100% { opacity: 0.4; transform: translateY(-4px); } 50% { opacity: 1; transform: translateY(4px); } }
+  .crosshair {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    width: 14px; height: 14px; pointer-events: none; opacity: 0.14; z-index: 3;
+  }
+  .crosshair::before, .crosshair::after { content: ""; position: absolute; background: var(--ink-2); }
+  .crosshair::before { left: 50%; top: 0; bottom: 0; width: 1px; }
+  .crosshair::after { top: 50%; left: 0; right: 0; height: 1px; }
+
+  /* ===== CONTENT ===== */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 56px;
+  }
+  section.s {
+    padding: 140px 0 60px;
+    border-bottom: 1px solid var(--line-2);
+    position: relative;
+    scroll-margin-top: 60px;
+  }
+  section.s:last-of-type { border-bottom: none; }
+
+  .sec-head {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 48px;
+    margin-bottom: 64px;
+    align-items: start;
+  }
+  .sec-tag {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+    padding-top: 18px;
+    border-top: 1px solid var(--accent);
+  }
+  .sec-tag .num { display: block; font-family: var(--serif); font-style: italic; font-size: 28px; color: var(--ink); margin-top: 8px; letter-spacing: 0; text-transform: none; }
+  .sec-title { max-width: 900px; }
+  .sec-title h2 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(40px, 5.2vw, 72px);
+    line-height: 0.98; letter-spacing: -0.02em;
+    margin: 0 0 18px;
+    color: var(--ink);
+  }
+  .sec-title h2 em { font-style: italic; color: var(--accent); font-weight: 400; }
+  .sec-title .kicker {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-3);
+    margin-bottom: 18px;
+  }
+  .sec-title p.lead {
+    font-family: var(--sans); font-size: 19px; font-weight: 300; line-height: 1.55;
+    color: var(--ink-2);
+    max-width: 760px;
+    margin: 18px 0 0;
+  }
+  @media (max-width: 800px) {
+    .sec-head { grid-template-columns: 1fr; gap: 16px; }
+    .container { padding: 0 24px; }
+    section.s { padding: 96px 0 40px; }
+  }
+
+  h3.block {
+    font-family: var(--sans); font-weight: 500;
+    font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 18px;
+  }
+  h4.sub {
+    font-family: var(--serif); font-style: italic; font-weight: 400;
+    font-size: 28px; line-height: 1.15; letter-spacing: -0.01em;
+    color: var(--ink); margin: 0 0 12px;
+  }
+  p { margin: 0 0 18px; color: var(--ink-2); text-wrap: pretty; font-size: 16px; line-height: 1.65; }
+  p strong { color: var(--ink); font-weight: 500; }
+
+  /* layout helpers */
+  .grid { display: grid; gap: 24px; }
+  .grid.col-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid.col-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid.col-4 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 900px) {
+    .grid.col-2, .grid.col-3, .grid.col-4 { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    border: 1px solid var(--line-2);
+    background: oklch(0.18 0.013 240 / 0.5);
+    padding: 28px 28px 30px;
+  }
+  .panel .tag {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+    display: flex; align-items: baseline; gap: 10px;
+    margin-bottom: 18px;
+  }
+  .panel .tag .ix { color: var(--ink-3); font-size: 11px; }
+  .panel h4 {
+    font-family: var(--serif); font-style: italic; font-weight: 400;
+    font-size: 30px; line-height: 1.08; letter-spacing: -0.01em;
+    color: var(--ink); margin: 0 0 14px;
+  }
+  .panel p { font-size: 15px; line-height: 1.6; }
+
+  /* three-card column compare (coma / EV / ME) */
+  .compare-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--line-2); }
+  .compare-cards > div { padding: 32px 28px; border-right: 1px solid var(--line-2); }
+  .compare-cards > div:last-child { border-right: none; }
+  .compare-cards .h {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--ink-3); margin-bottom: 10px;
+  }
+  .compare-cards .t {
+    font-family: var(--serif); font-style: italic; font-weight: 400;
+    font-size: 32px; line-height: 1.05; letter-spacing: -0.01em;
+    color: var(--ink); margin-bottom: 18px;
+  }
+  .compare-cards .t.me { color: var(--accent); }
+  .compare-cards p { font-size: 14.5px; line-height: 1.55; margin: 0; }
+  @media (max-width: 900px) {
+    .compare-cards { grid-template-columns: 1fr; }
+    .compare-cards > div { border-right: none; border-bottom: 1px solid var(--line-2); }
+    .compare-cards > div:last-child { border-bottom: none; }
+  }
+
+  /* numbered steps */
+  .steps { display: grid; gap: 0; border-top: 1px solid var(--line-2); }
+  .step {
+    display: grid; grid-template-columns: 90px 1fr; gap: 28px;
+    padding: 26px 0;
+    border-bottom: 1px solid var(--line-2);
+    align-items: start;
+  }
+  .step .marker {
+    font-family: var(--serif); font-style: italic; font-size: 42px;
+    color: var(--accent); letter-spacing: -0.01em; line-height: 1;
+  }
+  .step .body h4 {
+    font-family: var(--sans); font-weight: 500; font-size: 17px;
+    color: var(--ink); margin: 0 0 8px; letter-spacing: -0.005em;
+  }
+  .step .body p { margin: 0; font-size: 15px; }
+
+  /* reflex grid */
+  .reflexes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; border-top: 1px solid var(--line-2); }
+  .reflex {
+    padding: 26px 28px;
+    border-right: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+  }
+  .reflex:nth-child(2n) { border-right: none; }
+  .reflex .ix {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; color: var(--ink-3);
+    margin-bottom: 8px;
+  }
+  .reflex h4 {
+    font-family: var(--serif); font-style: italic; font-weight: 400;
+    font-size: 24px; line-height: 1.1; color: var(--ink); margin: 0 0 8px;
+  }
+  .reflex p { font-size: 14.5px; line-height: 1.55; margin: 0 0 8px; }
+  .reflex .nerves {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent);
+  }
+  @media (max-width: 800px) {
+    .reflexes { grid-template-columns: 1fr; }
+    .reflex { border-right: none; }
+  }
+
+  /* by-country */
+  .countries { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .country {
+    border: 1px solid var(--line-2);
+    padding: 28px 24px;
+    background: oklch(0.18 0.013 240 / 0.4);
+  }
+  .country .flag {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 14px;
+  }
+  .country h4 {
+    font-family: var(--serif); font-style: italic; font-weight: 400;
+    font-size: 32px; line-height: 1.05; color: var(--ink); margin: 0 0 14px;
+  }
+  .country p { font-size: 14.5px; line-height: 1.55; margin: 0; }
+  @media (max-width: 900px) { .countries { grid-template-columns: 1fr; } }
+
+  /* FAQ */
+  .faq { border-top: 1px solid var(--line-2); }
+  .faq details {
+    border-bottom: 1px solid var(--line-2);
+    padding: 22px 0;
+  }
+  .faq summary {
+    list-style: none;
+    cursor: pointer;
+    display: grid; grid-template-columns: 1fr 32px; gap: 24px; align-items: center;
+    font-family: var(--serif); font-style: italic; font-weight: 400;
+    font-size: clamp(22px, 2.4vw, 30px); line-height: 1.2; letter-spacing: -0.01em;
+    color: var(--ink);
+    transition: color 0.2s;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary:hover { color: var(--accent); }
+  .faq summary .plus {
+    font-family: var(--mono); font-style: normal; font-size: 22px; font-weight: 400;
+    color: var(--accent); text-align: right;
+    transition: transform 0.3s;
+  }
+  .faq details[open] summary .plus { transform: rotate(45deg); }
+  .faq .answer {
+    padding: 18px 56px 6px 0;
+  }
+  .faq .answer p { font-size: 16px; line-height: 1.65; color: var(--ink-2); margin: 0 0 14px; }
+  .faq .answer p:last-child { margin-bottom: 0; }
+
+  /* stats / data */
+  .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; border: 1px solid var(--line-2); }
+  .stat {
+    padding: 32px 32px 36px;
+    border-right: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+  }
+  .stat:nth-child(2n) { border-right: none; }
+  .stat:nth-last-child(-n+2):not(:nth-last-child(odd)) { border-bottom: none; }
+  .stat:last-child { border-bottom: none; }
+  .stat .num {
+    font-family: var(--serif); font-style: italic; font-weight: 400;
+    font-size: clamp(48px, 6vw, 80px); line-height: 1; color: var(--accent); letter-spacing: -0.025em;
+    display: flex; align-items: baseline; gap: 8px;
+  }
+  .stat .num small { font-family: var(--serif); font-style: italic; font-size: 0.4em; color: var(--ink-3); }
+  .stat .lbl {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--ink-3); margin-top: 10px; margin-bottom: 14px;
+  }
+  .stat p { font-size: 14.5px; margin: 0; }
+  @media (max-width: 800px) { .stat-grid { grid-template-columns: 1fr; } .stat { border-right: none; } }
+
+  /* placeholders */
+  .placeholder {
+    position: relative;
+    border: 1px dashed var(--line);
+    background:
+      repeating-linear-gradient(
+        135deg,
+        oklch(0.22 0.013 240 / 0.5) 0px,
+        oklch(0.22 0.013 240 / 0.5) 12px,
+        oklch(0.18 0.013 240 / 0.5) 12px,
+        oklch(0.18 0.013 240 / 0.5) 24px
+      );
+    color: var(--ink-3);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 18px;
+    min-height: 220px;
+    overflow: hidden;
+  }
+  .placeholder .corner {
+    position: absolute; top: 12px; right: 12px;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.22em;
+    color: var(--ink-3);
+  }
+  .placeholder .label-big {
+    font-family: var(--serif); font-style: italic; font-size: 22px; color: var(--ink-2); letter-spacing: -0.01em; text-transform: none;
+  }
+  .placeholder .meta {
+    display: flex; justify-content: space-between; gap: 12px;
+    color: var(--ink-3);
+  }
+
+  /* video card */
+  .videos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .video-card .placeholder { aspect-ratio: 16/10; min-height: 0; }
+  .video-card .role {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+    margin: 16px 0 6px;
+  }
+  .video-card h4 {
+    font-family: var(--serif); font-style: italic; font-weight: 400;
+    font-size: 22px; line-height: 1.15; color: var(--ink); margin: 0;
+  }
+  @media (max-width: 900px) { .videos { grid-template-columns: 1fr; } }
+
+  /* organs */
+  .organs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; border: 1px solid var(--line-2); }
+  .organ {
+    padding: 22px 16px;
+    border-right: 1px solid var(--line-2);
+    text-align: center;
+  }
+  .organ:last-child { border-right: none; }
+  .organ .ic {
+    width: 36px; height: 36px; margin: 0 auto 12px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif); font-style: italic; color: var(--accent); font-size: 16px;
+  }
+  .organ .nm {
+    font-family: var(--sans); font-size: 13px; color: var(--ink); font-weight: 400;
+  }
+  @media (max-width: 900px) {
+    .organs { grid-template-columns: repeat(3, 1fr); }
+    .organ { border-bottom: 1px solid var(--line-2); }
+    .organ:nth-child(3n) { border-right: none; }
+  }
+
+  /* pull quote */
+  .pull {
+    margin: 36px 0;
+    padding: 28px 32px;
+    border-left: 2px solid var(--accent);
+    background: oklch(0.18 0.013 240 / 0.4);
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(22px, 2.4vw, 30px); line-height: 1.35;
+    color: var(--ink);
+  }
+  .pull cite {
+    display: block; margin-top: 14px;
+    font-family: var(--mono); font-style: normal;
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-3);
+  }
+
+  /* authors */
+  .authors {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    margin: 32px 0;
+  }
+  .author {
+    border: 1px solid var(--line-2);
+    padding: 28px;
+    display: flex; align-items: center; gap: 22px;
+    background: oklch(0.18 0.013 240 / 0.4);
+  }
+  .author .avatar {
+    width: 80px; height: 80px; flex-shrink: 0;
+    border: 1px dashed var(--line);
+    background:
+      repeating-linear-gradient(
+        135deg,
+        oklch(0.22 0.013 240) 0px,
+        oklch(0.22 0.013 240) 6px,
+        oklch(0.18 0.013 240) 6px,
+        oklch(0.18 0.013 240) 12px
+      );
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; color: var(--ink-3);
+  }
+  .author .nm {
+    font-family: var(--serif); font-style: italic; font-size: 26px; line-height: 1.1; color: var(--ink); margin-bottom: 4px;
+  }
+  .author .meta {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3);
+  }
+  @media (max-width: 700px) { .authors { grid-template-columns: 1fr; } }
+
+  /* references */
+  .refs { display: grid; gap: 0; border-top: 1px solid var(--line-2); }
+  .ref {
+    display: grid; grid-template-columns: 50px 1fr 80px; gap: 24px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line-2);
+    align-items: baseline;
+  }
+  .ref .n { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.1em; }
+  .ref a { color: var(--ink); text-decoration: none; border-bottom: 1px dotted var(--ink-3); font-size: 14.5px; word-break: break-word; }
+  .ref a:hover { color: var(--accent); border-color: var(--accent); }
+  .ref .src { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); text-align: right; }
+  @media (max-width: 700px) {
+    .ref { grid-template-columns: 40px 1fr; }
+    .ref .src { display: none; }
+  }
+
+  /* requirement list */
+  .req-list { border-top: 1px solid var(--line-2); }
+  .req {
+    display: grid; grid-template-columns: 60px 1fr;
+    gap: 24px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line-2);
+  }
+  .req .ix { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; color: var(--accent); padding-top: 4px; }
+  .req h4 { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 22px; color: var(--ink); margin: 0 0 6px; line-height: 1.2; }
+  .req p { font-size: 14.5px; margin: 0; }
+
+  /* exam tests group */
+  .exam-group {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+  }
+  .exam-block {
+    border: 1px solid var(--line-2);
+    padding: 28px;
+    background: oklch(0.18 0.013 240 / 0.4);
+  }
+  .exam-block .lbl {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .exam-block h4 {
+    font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 28px;
+    color: var(--ink); margin: 0 0 16px; line-height: 1.1;
+  }
+  .exam-block ul { margin: 0; padding: 0; list-style: none; }
+  .exam-block li {
+    padding: 10px 0;
+    border-top: 1px dashed var(--line-2);
+    font-size: 15px; color: var(--ink-2);
+    display: flex; gap: 10px; align-items: baseline;
+  }
+  .exam-block li::before {
+    content: "";
+    flex-shrink: 0;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: translateY(-2px);
+  }
+  .exam-block li b { color: var(--ink); font-weight: 500; }
+  .exam-block li .note { color: var(--ink-3); font-size: 13px; font-style: italic; }
+  @media (max-width: 800px) { .exam-group { grid-template-columns: 1fr; } }
+
+  /* two-region card (cérebro / tronco) */
+  .two-region { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--line-2); }
+  .two-region > div {
+    padding: 36px 32px;
+    border-right: 1px solid var(--line-2);
+  }
+  .two-region > div:last-child { border-right: none; }
+  .two-region .lbl {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .two-region h4 {
+    font-family: var(--serif); font-style: italic; font-weight: 400;
+    font-size: 36px; line-height: 1.05; letter-spacing: -0.01em;
+    color: var(--ink); margin: 0 0 16px;
+  }
+  .two-region p { font-size: 15.5px; line-height: 1.6; margin: 0; }
+  @media (max-width: 800px) {
+    .two-region { grid-template-columns: 1fr; }
+    .two-region > div { border-right: none; border-bottom: 1px solid var(--line-2); }
+    .two-region > div:last-child { border-bottom: none; }
+  }
+
+  /* call-to-attention banner (link) */
+  .cta-card {
+    border: 1px solid var(--accent);
+    padding: 28px 32px;
+    background: oklch(0.83 0.11 195 / 0.06);
+    display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center;
+    margin: 32px 0;
+  }
+  .cta-card .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+  .cta-card .t { font-family: var(--serif); font-style: italic; font-size: 24px; line-height: 1.2; color: var(--ink); margin-bottom: 4px; }
+  .cta-card .desc { font-size: 14.5px; color: var(--ink-2); margin: 0; }
+  .cta-card a {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent); text-decoration: none; border: 1px solid var(--accent);
+    padding: 12px 18px;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+  }
+  .cta-card a:hover { background: var(--accent); color: var(--bg); }
+  @media (max-width: 700px) { .cta-card { grid-template-columns: 1fr; } }
+
+  /* footer */
+  footer {
+    padding: 80px 56px 60px;
+    border-top: 1px solid var(--line-2);
+    display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3);
+  }
+  footer b { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--ink-2); letter-spacing: 0; font-size: 14px; text-transform: none; }
+
+  @media (max-width: 900px) {
+    .hero-overlay { padding: 80px 24px 32px; }
+    footer { padding: 60px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="dot"></span>
+    <b>Cérebro que Salva Vidas</b>
+    <span class="desc">Univali · Trabalho Acadêmico</span>
+  </div>
+  <nav class="index" id="nav">
+    <a href="#sobre"        data-target="sobre"><span class="n">01</span>Sobre</a>
+    <a href="#conceito"     data-target="conceito"><span class="n">02</span>Conceito</a>
+    <a href="#diferencas"   data-target="diferencas"><span class="n">03</span>Diferenças</a>
+    <a href="#diagnostico"  data-target="diagnostico"><span class="n">04</span>Diagnóstico</a>
+    <a href="#reflexos"     data-target="reflexos"><span class="n">05</span>Reflexos</a>
+    <a href="#exames"       data-target="exames"><span class="n">06</span>Exames</a>
+    <a href="#paises"       data-target="paises"><span class="n">07</span>Países</a>
+    <a href="#perguntas"    data-target="perguntas"><span class="n">08</span>Perguntas</a>
+    <a href="#partes"       data-target="partes"><span class="n">09</span>Partes</a>
+    <a href="#dados"        data-target="dados"><span class="n">10</span>Dados</a>
+    <a href="#videos"       data-target="videos"><span class="n">11</span>Vídeos</a>
+    <a href="#doacao"       data-target="doacao"><span class="n">12</span>Doação</a>
+    <a href="#refs"         data-target="refs"><span class="n">13</span>Fontes</a>
+  </nav>
+</header>
+<div class="progress" id="progress"></div>
+
+<main>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" data-screen-label="00 Hero">
+    <div id="brain-canvas"></div>
+    <div class="crosshair"></div>
+    <div class="hero-overlay">
+      <div class="hero-top">
+        <div>
+          <span>encéfalo · vista volumétrica</span>
+          <span class="v">arraste · clique · explore</span>
+        </div>
+        <div style="text-align:right;">
+          <span id="rot-readout">θ 0.0°</span>
+          <span class="v">rotação · auto</span>
+        </div>
+      </div>
+
+      <div class="hero-title">
+        <div class="hero-eyebrow"><span class="bar"></span>morte encefálica &amp; doação de órgãos<span class="bar"></span></div>
+        <h1>O cérebro que<br/><em>salva vidas</em>.</h1>
+        <p class="sub">Um trabalho de duas estudantes de medicina sobre o que é a morte encefálica, como ela é diagnosticada, e por que uma única decisão familiar pode transformar a história de muitos pacientes.</p>
+      </div>
+
+      <div class="hero-bottom">
+        <div class="lab">
+          <span>autoras</span>
+          <b>Bárbara Linhares Dutra<br/>&amp; Maria Eduarda Santos</b>
+        </div>
+        <div class="scroll-hint">
+          <span>role para começar</span>
+          <span class="line"></span>
+        </div>
+        <div class="lab" style="text-align:right;">
+          <span>capítulos</span>
+          <b>13 seções</b>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <!-- ============ 01 / SOBRE ============ -->
+    <section class="s" id="sobre" data-screen-label="01 Sobre">
+      <div class="sec-head">
+        <div class="sec-tag">Capítulo<span class="num">01</span></div>
+        <div class="sec-title">
+          <div class="kicker">Quem está por trás do site</div>
+          <h2>Duas estudantes, um <em>convite</em> a entender.</h2>
+        </div>
+      </div>
+
+      <p class="lead" style="font-size:19px;color:var(--ink);max-width:900px;">Esse trabalho é composto por duas estudantes de medicina do primeiro período da Univali — Universidade do Alto Vale do Itajaí (SC).</p>
+
+      <p>Muito prazer, nos chamamos <strong>Bárbara Linhares Dutra</strong> e <strong>Maria Eduarda Santos</strong> e criamos esse site com o intuito de informar de maneira acessível, para quem busca saber mais, sobre a morte encefálica e a doação de órgãos no Brasil. Neste site trouxemos dados e informações baseadas em artigos como <em>"MORTE ENCEFÁLICA E DOAÇÃO DE ÓRGÃOS E TECIDOS — BRAIN DEATH AND ORGAN DONATION"</em>, a fim de trazer os conceitos da melhor maneira — embasado em ciência e estudo.</p>
+
+      <div class="authors">
+        <div class="author">
+          <div class="avatar">FOTO<br/>1:1</div>
+          <div>
+            <div class="nm">Bárbara Linhares Dutra</div>
+            <div class="meta">Medicina · 1º período · Univali</div>
+          </div>
+        </div>
+        <div class="author">
+          <div class="avatar">FOTO<br/>1:1</div>
+          <div>
+            <div class="nm">Maria Eduarda Santos</div>
+            <div class="meta">Medicina · 1º período · Univali</div>
+          </div>
+        </div>
+      </div>
+
+      <p>O nosso público alvo é amplo, tendo em vista o tipo de linguagem que, apesar de formal, é compreensível pelas diversas esferas da sociedade, visto que o tema é importante em todo o cenário nacional e deve ser entendido e disseminado, para que outras vidas também possam ser mudadas com o gesto da doação de órgãos — feito tão significativo para pacientes que necessitam de transplante.</p>
+
+      <p>Nesse site explicaremos o passo a passo do diagnóstico da morte encefálica, bem como esclarecer dúvidas frequentes. Para isso, trouxemos três vídeos de profissionais da área da saúde, são eles: <strong>Bombeiro Alexandre Correa</strong>, <strong>neurocirurgião Marcelo Linhares</strong> e <strong>neurologista Willian Baia</strong>.</p>
+
+      <p>Além disso, na aba <em>"Relato de caso"</em>, trouxemos um relato de um paciente que realizou transplante de rim e compartilhou um pouco da sua história conosco, abordando o impacto que a doação de órgãos trouxe para sua vida, desde os detalhes pequenos do dia a dia, até sonhos que ele pôde voltar a sonhar.</p>
+
+      <div class="pull">
+        Esperamos que nosso trabalho consiga atingir o objetivo principal: tornar esse assunto tão delicado e sensível, entendido por parte dos que lerem. Esperamos que nosso trabalho faça a diferença na vida de alguém!
+        <cite>— As autoras</cite>
+      </div>
+
+      <div class="cta-card">
+        <div>
+          <div class="lbl">Indicação · Associação Brasileira de Transplantes</div>
+          <div class="t">Conheça relatos de transplantados e saiba como ser doador.</div>
+          <p class="desc">Link para a Associação Brasileira de Transplante de Órgãos.</p>
+        </div>
+        <a href="https://site.abto.org.br" target="_blank" rel="noopener">site.abto.org.br ↗</a>
+      </div>
+    </section>
+
+    <!-- ============ 02 / CONCEITO ============ -->
+    <section class="s" id="conceito" data-screen-label="02 Conceito">
+      <div class="sec-head">
+        <div class="sec-tag">Capítulo<span class="num">02</span></div>
+        <div class="sec-title">
+          <div class="kicker">Conceito de morte encefálica</div>
+          <h2>A cessação <em>irreversível</em> de todas as funções cerebrais.</h2>
+        </div>
+      </div>
+
+      <p class="lead" style="font-size:19px;color:var(--ink);max-width:900px;">A morte encefálica (ME) é definida como a cessação irreversível de todas as funções cerebrais, incluindo as do tronco encefálico.</p>
+
+      <p>Clinicamente, é caracterizada por três sinais cardinais: <strong>coma ou ausência de resposta, ausência de reflexos do tronco encefálico e apneia</strong>. Existem diferentes formulações conceituais, sendo a mais aceita a do <em>"cérebro total"</em>, que exige a perda de função dos hemisférios, diencéfalo, tronco encefálico e cerebelo.</p>
+
+      <h3 class="block">Os três sinais cardinais</h3>
+      <div class="grid col-3">
+        <div class="panel">
+          <div class="tag"><span class="ix">01</span>Sinal cardinal</div>
+          <h4>Coma ou ausência de resposta</h4>
+          <p>Estado de inconsciência profunda, sem qualquer resposta a estímulos externos.</p>
+        </div>
+        <div class="panel">
+          <div class="tag"><span class="ix">02</span>Sinal cardinal</div>
+          <h4>Ausência de reflexos do tronco encefálico</h4>
+          <p>Todos os reflexos do tronco — pupilar, corneano, oculocefálico, oculovestibular, tosse e deglutição — estão abolidos.</p>
+        </div>
+        <div class="panel">
+          <div class="tag"><span class="ix">03</span>Sinal cardinal</div>
+          <h4>Apneia</h4>
+          <p>Ausência de respiração espontânea, mesmo sob estímulo máximo do centro respiratório.</p>
+        </div>
+      </div>
+
+      <h3 class="block" style="margin-top:48px;">Origem histórica</h3>
+      <p>Foi com <strong>tafofobia (medo de ser enterrado vivo)</strong> que surgiu a necessidade de confirmar o óbito do indivíduo. Segundo o artigo de Greer et al. (2020) publicado no <em>Journal of the American Medical Association (JAMA)</em>, a morte encefálica é o estado no qual ocorre a perda completa das funções do cérebro e do tronco encefálico, sendo irreversível e diagnosticada por critérios clínicos rigorosos associados, quando necessário, a exames complementares, mesmo que outros órgãos continuem em função e por vezes o corpo apresenta espasmos, os quais são interpretados por familiares como movimentos e até esperança.</p>
+    </section>
+
+    <!-- ============ 03 / DIFERENÇAS ============ -->
+    <section class="s" id="diferencas" data-screen-label="03 Diferenças">
+      <div class="sec-head">
+        <div class="sec-tag">Capítulo<span class="num">03</span></div>
+        <div class="sec-title">
+          <div class="kicker">Coma · Estado Vegetativo · Morte Encefálica</div>
+          <h2>Três quadros, <em>um silêncio</em> diferente.</h2>
+        </div>
+      </div>
+
+      <div class="compare-cards">
+        <div>
+          <div class="h">Quadro 01</div>
+          <div class="t">Coma</div>
+          <p>É um estado de profunda inconsciência e falta de resposta a estímulos, frequentemente causado por disfunção do <strong>Sistema Ativador Reticular Ascendente (SARA)</strong>. No coma, o paciente pode manter reflexos do tronco encefálico e ter potencial de recuperação.</p>
+        </div>
+        <div>
+          <div class="h">Quadro 02</div>
+          <div class="t">Estado Vegetativo</div>
+          <p>Ocorre quando há destruição do córtex e hemisférios (funções cognitivas), mas o tronco encefálico permanece íntegro. Isso permite que o paciente continue respirando espontaneamente, o que impossibilita o diagnóstico de morte encefálica.</p>
+        </div>
+        <div>
+          <div class="h">Quadro 03</div>
+          <div class="t me">Morte Encefálica</div>
+          <p>Diferencia-se dos estados anteriores pela <strong>perda total e permanente de todas as funções do encéfalo</strong>, incluindo os centros vitais do tronco que controlam a respiração.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 04 / DIAGNÓSTICO ============ -->
+    <section class="s" id="diagnostico" data-screen-label="04 Diagnóstico">
+      <div class="sec-head">
+        <div class="sec-tag">Capítulo<span class="num">04</span></div>
+        <div class="sec-title">
+          <div class="kicker">Como o diagnóstico é feito</div>
+          <h2>Quatro etapas, <em>rigorosamente</em> clínicas.</h2>
+          <p class="lead">O diagnóstico é estritamente clínico e segue etapas rigorosas:</p>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="marker">01</div>
+          <div class="body">
+            <h4>Pré-requisitos</h4>
+            <p>Deve-se estabelecer uma causa conhecida e irreversível, como: trauma grave ou hemorragia intracraniana.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="marker">02</div>
+          <div class="body">
+            <h4>Exclusão de fatores confundidores</h4>
+            <p>É obrigatório descartar distúrbios metabólicos graves, intoxicação por drogas (esperando-se ao menos 5 meias-vidas do fármaco), bloqueio neuromuscular e hipotermia (temperatura central deve ser &gt;36°C ou &gt;36,5°C dependendo do protocolo).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="marker">03</div>
+          <div class="body">
+            <h4>Exame Clínico</h4>
+            <p>Realização de testes de reflexos de tronco e o teste de apneia.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="marker">04</div>
+          <div class="body">
+            <h4>Período de Observação</h4>
+            <p>É necessário um tempo de espera para garantir a irreversibilidade, que varia conforme a idade e a jurisdição.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 05 / REFLEXOS ============ -->
+    <section class="s" id="reflexos" data-screen-label="05 Reflexos">
+      <div class="sec-head">
+        <div class="sec-tag">Capítulo<span class="num">05</span></div>
+        <div class="sec-title">
+          <div class="kicker">Quais reflexos são testados</div>
+          <h2>Seis testes para o <em>silêncio</em> do tronco.</h2>
+          <p class="lead">Os testes avaliam a integridade dos nervos cranianos e do tronco encefálico.</p>
+        </div>
+      </div>
+
+      <div class="reflexes">
+        <div class="reflex">
+          <div class="ix">Reflexo 01</div>
+          <h4>Reflexo Fotomotor</h4>
+          <p>Ausência de reação das pupilas à luz.</p>
+          <div class="nerves">Nervos II e III</div>
+        </div>
+        <div class="reflex">
+          <div class="ix">Reflexo 02</div>
+          <h4>Reflexo Corneano</h4>
+          <p>Ausência de resposta ao tocar a córnea com algodão.</p>
+          <div class="nerves">Nervos V e VII</div>
+        </div>
+        <div class="reflex">
+          <div class="ix">Reflexo 03</div>
+          <h4>Reflexo Oculocefálico ("Olhos de Boneca")</h4>
+          <p>Ausência de movimento ocular ao girar a cabeça.</p>
+          <div class="nerves">Nervos VIII, III e VI</div>
+        </div>
+        <div class="reflex">
+          <div class="ix">Reflexo 04</div>
+          <h4>Reflexo Oculovestibular (Prova Calórica)</h4>
+          <p>Ausência de movimento dos olhos após irrigação do conduto auditivo com água gelada.</p>
+          <div class="nerves">Nervos VIII, III e VI</div>
+        </div>
+        <div class="reflex">
+          <div class="ix">Reflexo 05</div>
+          <h4>Reflexos de Tosse e Deglutição</h4>
+          <p>Ausência de resposta à estimulação da faringe e traqueia.</p>
+          <div class="nerves">Nervos IX e X</div>
+        </div>
+        <div class="reflex">
+          <div class="ix">Reflexo 06</div>
+          <h4>Resposta Motora</h4>
+          <p>Ausência de resposta motora de origem cerebral a estímulos dolorosos supraorbitais ou no leito ungueal.</p>
+          <div class="nerves">Origem cerebral</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 06 / EXAMES COMPLEMENTARES ============ -->
+    <section class="s" id="exames" data-screen-label="06 Exames">
+      <div class="sec-head">
+        <div class="sec-tag">Capítulo<span class="num">06</span></div>
+        <div class="sec-title">
+          <div class="kicker">Exames complementares (Ancillary Testing)</div>
+          <h2>Quando o clínico precisa de <em>provas</em>.</h2>
+        </div>
+      </div>
+
+      <p>São utilizados quando o exame clínico ou o teste de apneia não podem ser completados ou quando há incerteza diagnóstica. Eles são divididos em dois tipos:</p>
+
+      <div class="exam-group" style="margin-top:32px;">
+        <div class="exam-block">
+          <div class="lbl">Tipo 01</div>
+          <h4>Fluxo Sanguíneo Cerebral</h4>
+          <ul>
+            <li><div><b>Angiografia Digital</b> <span class="note">(Padrão Ouro)</span></div></li>
+            <li><div><b>Cintilografia</b> <span class="note">(SPECT)</span></div></li>
+            <li><div><b>Doppler Transcraniano</b></div></li>
+            <li><div><b>Angiotomografia</b> <span class="note">embora esta ainda enfrente debates sobre sua precisão em alguns protocolos</span></div></li>
+          </ul>
+        </div>
+        <div class="exam-block">
+          <div class="lbl">Tipo 02</div>
+          <h4>Atividade Elétrica</h4>
+          <ul>
+            <li><div><b>Eletroencefalograma (EEG)</b> <span class="note">deve mostrar silêncio eletrocerebral</span></div></li>
+            <li><div><b>Potenciais Evocados Somatossensoriais</b></div></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 07 / PAÍSES ============ -->
+    <section class="s" id="paises" data-screen-label="07 Países">
+      <div class="sec-head">
+        <div class="sec-tag">Capítulo<span class="num">07</span></div>
+        <div class="sec-title">
+          <div class="kicker">Quem pode diagnosticar</div>
+          <h2>A regra varia, <em>o rigor não</em>.</h2>
+          <p class="lead">A responsabilidade geralmente recai sobre médicos capacitados e experientes, mas as regras variam por país.</p>
+        </div>
+      </div>
+
+      <div class="countries">
+        <div class="country">
+          <div class="flag">País 01 · EUA</div>
+          <h4>Estados Unidos</h4>
+          <p>As diretrizes sugerem que médicos atendentes competentes realizem a avaliação, sendo necessário apenas um exame em adultos.</p>
+        </div>
+        <div class="country">
+          <div class="flag">País 02 · Índia</div>
+          <h4>Índia</h4>
+          <p>O protocolo exige que a ME seja certificada por quatro médicos, sendo um deles obrigatoriamente um neurologista ou neurocirurgião.</p>
+        </div>
+        <div class="country">
+          <div class="flag">País 03 · Brasil</div>
+          <h4>Brasil</h4>
+          <p>A constatação da morte encefálica deverá feita por médicos com capacitação específica, observando o protocolo estabelecido que define critérios precisos, padronizados e passíveis de serem realizados em todo território nacional. Serão feitos dois exames clínicos com intervalos variados, realizados por médicos diferentes.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 08 / PERGUNTAS ============ -->
+    <section class="s" id="perguntas" data-screen-label="08 Perguntas">
+      <div class="sec-head">
+        <div class="sec-tag">Capítulo<span class="num">08</span></div>
+        <div class="sec-title">
+          <div class="kicker">Perguntas frequentes da família</div>
+          <h2>O que perguntam, <em>e o que respondemos</em>.</h2>
+        </div>
+      </div>
+
+      <div class="faq">
+
+        <details open>
+          <summary><span>O que significa "morte encefálica"?</span><span class="plus">+</span></summary>
+          <div class="answer">
+            <p>Morte encefálica é a definição legal de morte. É a completa e irreversível parada de todas as funções do cérebro. Isto significa que, como resultado de severa agressão ou ferimento grave no cérebro, o sangue que vem do corpo e supre o cérebro é bloqueado e o cérebro morre.</p>
+            <p><strong>Obs.:</strong> a morte encefálica é permanente e irreversível.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary><span>Como fica decidido que nosso ente querido está com morte encefálica?</span><span class="plus">+</span></summary>
+          <div class="answer">
+            <p>O diagnóstico de morte encefálica é estabelecido por um médico por meio de protocolos clínicos rigorosos e baseados em normas médicas consolidadas. O procedimento inclui exames para confirmar que o paciente não apresenta mais reflexos cerebrais e perdeu a capacidade de respirar de forma autônoma. Geralmente, para assegurar a precisão absoluta, os testes são realizados duas vezes com um intervalo de algumas horas entre eles.</p>
+            <p>Além da avaliação clínica, podem ser feitos exames adicionais, como o angiograma cerebral (que avalia o fluxo sanguíneo no cérebro) ou o eletroencefalograma (que mede a atividade elétrica cerebral). Esses testes servem para confirmar que não há circulação de sangue ou atividade elétrica no órgão. É importante observar que o paciente ainda pode apresentar movimentos ou contrações musculares involuntárias; estes são chamados de reflexos espinhais. Tais movimentos são causados por impulsos elétricos que partem da coluna vertebral e podem ocorrer mesmo após a morte do cérebro. Os familiares podem solicitar ao médico explicações detalhadas ou demonstrações de como o diagnóstico foi concluído.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary><span>O que acontece com nosso ente querido enquanto esses testes estão sendo feitos?</span><span class="plus">+</span></summary>
+          <div class="answer">
+            <p>Enquanto os testes são conduzidos, o paciente é mantido em um ventilador mecânico (aparelho que realiza a respiração artificial), permitindo que o corpo continue recebendo oxigênio. Também podem ser administrados medicamentos para estabilizar a pressão sanguínea e outras funções biológicas. Esse suporte é mantido durante todo o protocolo, mas não interfere na precisão da determinação da morte encefálica.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary><span>Não há drogas que podem parar o trabalho do cérebro dando um falso diagnóstico?</span><span class="plus">+</span></summary>
+          <div class="answer">
+            <p>Algumas substâncias, como sedativos e relaxantes musculares, podem mascarar a real função cerebral. Para evitar um falso diagnóstico, os médicos aguardam a redução dos níveis dessas drogas no organismo para medir a atividade cerebral com maior precisão. Em casos onde essas substâncias foram utilizadas, exames complementares adicionais são realizados para validar o resultado.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary><span>Se nosso ente querido está realmente morto, por que seu coração ainda bate?</span><span class="plus">+</span></summary>
+          <div class="answer">
+            <p>Muitas vezes surge a dúvida de por que o coração continua batendo se houve a morte encefálica. Isso ocorre porque o coração consegue funcionar enquanto houver oferta de oxigênio, que é fornecida artificialmente pelo ventilador. Sem esse suporte tecnológico, o coração pararia de bater em pouco tempo, pois o comando cerebral para a vida foi perdido.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary><span>Há mais alguma coisa que possa ser feita?</span><span class="plus">+</span></summary>
+          <div class="answer">
+            <p>Antes que o diagnóstico de morte encefálica seja oficialmente declarado, todos os esforços médicos e recursos terapêuticos são utilizados na tentativa de salvar a vida do paciente. No entanto, uma vez que o diagnóstico é confirmado, não existe possibilidade de recuperação, pois a função cerebral cessou de forma definitiva.</p>
+            <p>A despedida de um ente querido nesse estado é um processo doloroso e complexo, especialmente porque a aparência física pode ser enganosa. Devido ao uso de ventiladores mecânicos que oxigenam os pulmões e monitores que indicam a atividade cardíaca, o paciente pode parecer estar apenas dormindo, mantendo o corpo aquecido e com cor natural. Contudo, apesar desses sinais mantidos artificialmente, o indivíduo está, técnica e legalmente, morto.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary><span>O que acontece em seguida à declaração de morte encefálica?</span><span class="plus">+</span></summary>
+          <div class="answer">
+            <p>A morte encefálica costuma ser o resultado de lesões ou acidentes súbitos. Após a declaração formal do óbito, profissionais de saúde auxiliam a família nas decisões imediatas que precisam ser tomadas. As principais opções apresentadas são a doação de órgãos e tecidos ou a interrupção do suporte respiratório. É importante esclarecer que, como o paciente já é considerado legalmente morto no momento do diagnóstico, a remoção do ventilador não é a causa do falecimento, mas apenas a retirada de um suporte artificial.</p>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- ============ 09 / PARTES ============ -->
+    <section class="s" id="partes" data-screen-label="09 Partes do Cérebro">
+      <div class="sec-head">
+        <div class="sec-tag">Capítulo<span class="num">09</span></div>
+        <div class="sec-title">
+          <div class="kicker">Quais partes do cérebro param na morte cerebral?</div>
+          <h2>Todas, <em>definitivamente</em>.</h2>
+          <p class="lead">Na morte encefálica, todas as partes do encéfalo têm suas funções interrompidas de forma definitiva e irreversível. Isso inclui duas áreas principais:</p>
+        </div>
+      </div>
+
+      <div class="two-region">
+        <div>
+          <div class="lbl">Área principal 01</div>
+          <h4>O Cérebro<br/><span style="color:var(--ink-3);font-size:0.55em;">Telencéfalo e Diencéfalo</span></h4>
+          <p>Responsável pela consciência, sentimentos, movimentos voluntários, memória e interpretação dos sentidos.</p>
+        </div>
+        <div>
+          <div class="lbl">Área principal 02</div>
+          <h4>O Tronco Encefálico</h4>
+          <p>Responsável pelas funções vitais autônomas, como controle da respiração, batimentos cardíacos, pressão arterial e reflexos básicos (como tosse, deglutição e o reflexo da pupila).</p>
+        </div>
+      </div>
+
+      <h3 class="block" style="margin-top:48px;">Entenda o cérebro</h3>
+      <div class="placeholder" style="aspect-ratio: 16/8; min-height: 0;">
+        <div>
+          <div class="corner">FIG · 09.A</div>
+          <div class="meta"><span>imagem / diagrama</span><span>1600 × 800</span></div>
+        </div>
+        <div class="label-big">[ esquema do encéfalo — espaço reservado para diagrama anatômico ]</div>
+        <div class="meta">
+          <span>asset · a inserir</span>
+          <span>fonte: material da autora</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 10 / DADOS ============ -->
+    <section class="s" id="dados" data-screen-label="10 Dados">
+      <div class="sec-head">
+        <div class="sec-tag">Capítulo<span class="num">10</span></div>
+        <div class="sec-title">
+          <div class="kicker">Dados · doação e causas de morte encefálica</div>
+          <h2>Os números <em>do Brasil</em>.</h2>
+        </div>
+      </div>
+
+      <h3 class="block">Doação no ranking nacional</h3>
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="num">40<small>pmp</small></div>
+          <div class="lbl">Líderes nacionais</div>
+          <p>Santa Catarina e Paraná costumam liderar o ranking nacional, com taxas de doadores efetivos que chegam a 40 pmp, números comparáveis aos de países europeus líderes.</p>
+        </div>
+        <div class="stat">
+          <div class="num">42,8<small>pmp</small></div>
+          <div class="lbl">Santa Catarina · 2025</div>
+          <p>De acordo com a associação brasileira de transplante de órgãos Santa Catarina (SC) liderou o ranking com uma taxa de 42,8 doadores efetivos por milhão de população (pmp) em 2025, a maior do país.</p>
+        </div>
+        <div class="stat">
+          <div class="num">70%<small> → 32%</small></div>
+          <div class="lbl">Recusa familiar SC · 2007 → 2025</div>
+          <p>Santa Catarina teve redução da taxa de não autorização familiar, que caiu de 70% em 2007 para 32% em 2025.</p>
+        </div>
+        <div class="stat">
+          <div class="num">2<small>causas</small></div>
+          <div class="lbl">Principais causas de ME</div>
+          <p>AVC e TCE concentram a grande maioria dos casos no Brasil — duas causas com perfis e prevenções muito diferentes.</p>
+        </div>
+      </div>
+
+      <h3 class="block" style="margin-top:48px;">Principais causas de morte encefálica</h3>
+      <div class="grid col-2">
+        <div class="panel">
+          <div class="tag"><span class="ix">Causa 01</span>Principal</div>
+          <h4>AVC — Acidente Vascular Cerebral</h4>
+          <p>É a principal causa, somando os tipos isquêmico e hemorrágico (este último com grande incidência em casos de ME).</p>
+        </div>
+        <div class="panel">
+          <div class="tag"><span class="ix">Causa 02</span>Segunda principal</div>
+          <h4>TCE — Traumatismo Cranioencefálico</h4>
+          <p>Segunda causa principal, geralmente decorrente de acidentes de trânsito (especialmente envolvendo motocicletas) e quedas.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 11 / VÍDEOS ============ -->
+    <section class="s" id="videos" data-screen-label="11 Vídeos">
+      <div class="sec-head">
+        <div class="sec-tag">Capítulo<span class="num">11</span></div>
+        <div class="sec-title">
+          <div class="kicker">Três vídeos de profissionais da área da saúde</div>
+          <h2>A palavra de quem <em>vive isso</em>.</h2>
+        </div>
+      </div>
+
+      <div class="videos">
+        <div class="video-card">
+          <div class="placeholder">
+            <div>
+              <div class="corner">VÍDEO · 01</div>
+            </div>
+            <div class="label-big">[ vídeo a inserir ]</div>
+            <div class="meta">
+              <span>autor · entrevistado</span>
+              <span>16 : 9</span>
+            </div>
+          </div>
+          <div class="role">Bombeiro</div>
+          <h4>Alexandre Correa</h4>
+        </div>
+        <div class="video-card">
+          <div class="placeholder">
+            <div>
+              <div class="corner">VÍDEO · 02</div>
+            </div>
+            <div class="label-big">[ vídeo a inserir ]</div>
+            <div class="meta">
+              <span>autor · entrevistado</span>
+              <span>16 : 9</span>
+            </div>
+          </div>
+          <div class="role">Neurocirurgião</div>
+          <h4>Marcelo Linhares</h4>
+        </div>
+        <div class="video-card">
+          <div class="placeholder">
+            <div>
+              <div class="corner">VÍDEO · 03</div>
+            </div>
+            <div class="label-big">[ vídeo a inserir ]</div>
+            <div class="meta">
+              <span>autor · entrevistado</span>
+              <span>16 : 9</span>
+            </div>
+          </div>
+          <div class="role">Neurologista</div>
+          <h4>Willian Baia</h4>
+        </div>
+      </div>
+
+      <h3 class="block" style="margin-top:48px;">Relato de caso</h3>
+      <p>Na aba "Relato de caso", trouxemos um relato de um paciente que realizou transplante de rim e compartilhou um pouco da sua história conosco, abordando o impacto que a doação de órgãos trouxe para sua vida, desde os detalhes pequenos do dia a dia, até sonhos que ele pôde voltar a sonhar.</p>
+
+      <div class="placeholder" style="margin-top:18px;">
+        <div>
+          <div class="corner">RELATO · 01</div>
+          <div class="meta"><span>história · transplante de rim</span><span>texto + foto</span></div>
+        </div>
+        <div class="label-big">[ relato a inserir ]</div>
+        <div class="meta"><span>conteúdo do paciente</span><span>a curar</span></div>
+      </div>
+    </section>
+
+    <!-- ============ 12 / DOAÇÃO ============ -->
+    <section class="s" id="doacao" data-screen-label="12 Doação">
+      <div class="sec-head">
+        <div class="sec-tag">Capítulo<span class="num">12</span></div>
+        <div class="sec-title">
+          <div class="kicker">Doação de órgãos</div>
+          <h2>Um ato que <em>continua a vida</em>.</h2>
+        </div>
+      </div>
+
+      <h3 class="block">O que é a doação de órgãos?</h3>
+      <p class="lead" style="font-size:19px;color:var(--ink);max-width:900px;">A doação de órgãos é o ato de ceder órgãos ou tecidos saudáveis de uma pessoa viva ou falecida para outra que precisa de um transplante.</p>
+
+      <h3 class="block" style="margin-top:48px;">Como a doação de órgãos acontece no Brasil?</h3>
+      <p>Existem algumas etapas importantes sobre a doação de órgãos no Brasil.</p>
+
+      <div class="steps" style="margin-top:24px;">
+        <div class="step">
+          <div class="marker">01</div>
+          <div class="body">
+            <h4>Autorização</h4>
+            <p>A família precisa autorizar o procedimento de doação de órgãos, quando acontece em caso de morte encefálica do ente. Por isso, a família é informada sobre a morte encefálica e sobre o desejo de doar ou não os órgãos saudáveis desse paciente.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="marker">02</div>
+          <div class="body">
+            <h4>Avaliação</h4>
+            <p>A equipe médica avalia as condições dos órgãos para entender as possibilidades de doação e compatibilidade dos possíveis receptores.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="marker">03</div>
+          <div class="body">
+            <h4>Morte encefálica</h4>
+            <p>A doação de órgãos por morte encefálica só é permitida quando o diagnóstico é confirmado por meio dos testes necessários e quando é confirmado o não funcionamento irreversível do cérebro.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="marker">04</div>
+          <div class="body">
+            <h4>Cirurgia de retirada dos órgãos</h4>
+            <p>Quando a família autoriza a doação, os órgãos são retirados por uma equipe médica especializada, com todo cuidado para garantir a preservação e manter a qualidade do órgão que fará parte da vida de outro paciente.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="marker">05</div>
+          <div class="body">
+            <h4>Preservação e transporte</h4>
+            <p>Os órgãos são devidamente preservados e transportados para os hospitais em que serão realizados os transplantes. É necessário que isso seja feito de forma rápida e segura, para garantir a sua viabilidade.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="marker">06</div>
+          <div class="body">
+            <h4>Transplante</h4>
+            <p>Os órgãos doados são destinados a pessoas que estão na fila de espera por um transplante, passaram por avaliações médicas e são compatíveis com o doador. Assim, a cirurgia é realizada.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="block" style="margin-top:56px;">Quais órgãos podem ser doados?</h3>
+      <p>Coração, pulmões, fígado, rins, pâncreas e intestino. Além desses, diversos tecidos, como: pele, córneas, ossos e válvulas cardíacas também podem ser doados.</p>
+
+      <h4 class="sub" style="margin-top:24px;font-size:22px;">Órgãos sólidos</h4>
+      <div class="organs">
+        <div class="organ"><div class="ic">♥</div><div class="nm">Coração</div></div>
+        <div class="organ"><div class="ic">◐</div><div class="nm">Pulmões</div></div>
+        <div class="organ"><div class="ic">◇</div><div class="nm">Fígado</div></div>
+        <div class="organ"><div class="ic">◎</div><div class="nm">Rins</div></div>
+        <div class="organ"><div class="ic">◈</div><div class="nm">Pâncreas</div></div>
+        <div class="organ"><div class="ic">⊜</div><div class="nm">Intestino</div></div>
+      </div>
+
+      <h4 class="sub" style="margin-top:32px;font-size:22px;">Tecidos</h4>
+      <div class="organs">
+        <div class="organ"><div class="ic">⊙</div><div class="nm">Pele</div></div>
+        <div class="organ"><div class="ic">◉</div><div class="nm">Córneas</div></div>
+        <div class="organ"><div class="ic">⊗</div><div class="nm">Ossos</div></div>
+        <div class="organ"><div class="ic">⊛</div><div class="nm">Válvulas cardíacas</div></div>
+        <div class="organ" style="opacity:0;"></div>
+        <div class="organ" style="opacity:0;"></div>
+      </div>
+
+      <h3 class="block" style="margin-top:56px;">Quem pode ser doador de órgãos?</h3>
+      <p>Qualquer pessoa pode ser doador de órgãos em vida ou pós morte, desde que atenda aos requisitos de:</p>
+
+      <div class="req-list">
+        <div class="req">
+          <div class="ix">REQ 01</div>
+          <div>
+            <h4>Registro em vida</h4>
+            <p>Ter registrado, em vida, a vontade de ser doador de órgãos e conversar com a família sobre essa vontade, já que é dependente disso para a autorização em caso de morte encefálica. Além de deixar esse registro em documentos como CNH e Identidade.</p>
+          </div>
+        </div>
+        <div class="req">
+          <div class="ix">REQ 02</div>
+          <div>
+            <h4>Idade</h4>
+            <p>Cada órgão tem um limite de idade para doação, para que seja garantido sua qualidade. Por exemplo, o fígado pode ser doado até os 70 anos, enquanto a córnea, não existe idade limite.</p>
+          </div>
+        </div>
+        <div class="req">
+          <div class="ix">REQ 03</div>
+          <div>
+            <h4>Condição de saúde do doador</h4>
+            <p>É necessário que os órgãos estejam em condições adequadas para doação — que é avaliado pela equipe médica.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-card" style="margin-top:48px;">
+        <div>
+          <div class="lbl">Como ser um doador de órgãos</div>
+          <div class="t">Página oficial do Sistema Nacional de Transplantes.</div>
+          <p class="desc">gov.br/saude — saiba como ser doador de órgãos.</p>
+        </div>
+        <a href="https://www.gov.br/saude/pt-br/composicao/saes/snt/como-ser-doador-de-orgaos" target="_blank" rel="noopener">acessar gov.br ↗</a>
+      </div>
+
+      <div class="pull">
+        Dica de série: série sobre casos reais com relatos e pós-operatório de transplantes de órgãos — <em>"Operação Transplante"</em>, disponível na plataforma HBO Max.
+        <cite>— sugestão das autoras</cite>
+      </div>
+    </section>
+
+    <!-- ============ 13 / REFERÊNCIAS ============ -->
+    <section class="s" id="refs" data-screen-label="13 Referências">
+      <div class="sec-head">
+        <div class="sec-tag">Capítulo<span class="num">13</span></div>
+        <div class="sec-title">
+          <div class="kicker">Referências</div>
+          <h2>Sobre o que <em>se apoia</em> esta página.</h2>
+        </div>
+      </div>
+
+      <div class="refs">
+        <div class="ref">
+          <span class="n">[1]</span>
+          <a href="https://www.gov.br/saude/pt-br/composicao/saes/snt/morte-encefalica" target="_blank" rel="noopener">gov.br/saude/pt-br/composicao/saes/snt/morte-encefalica</a>
+          <span class="src">Min. Saúde</span>
+        </div>
+        <div class="ref">
+          <span class="n">[2]</span>
+          <a href="http://www.abto.org.br/abtov03/default.aspx?mn=472&amp;c=915&amp;s=0&amp;friendly=entendendo-a-morte-encefalica" target="_blank" rel="noopener">abto.org.br — entendendo a morte encefálica</a>
+          <span class="src">ABTO</span>
+        </div>
+        <div class="ref">
+          <span class="n">[3]</span>
+          <a href="https://www.cnnbrasil.com.br/saude/brasil-registra-maior-numero-de-doadores-de-orgaos-da-historia-do-pais/" target="_blank" rel="noopener">CNN Brasil — Brasil registra maior número de doadores de órgãos da história do país</a>
+          <span class="src">CNN</span>
+        </div>
+        <div class="ref">
+          <span class="n">[4]</span>
+          <a href="https://site.abto.org.br" target="_blank" rel="noopener">site.abto.org.br — Associação Brasileira de Transplante de Órgãos</a>
+          <span class="src">ABTO</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <div><b>Cérebro que Salva Vidas</b> · Univali · 2026</div>
+    <div>Bárbara Linhares Dutra &amp; Maria Eduarda Santos</div>
+    <div>conteúdo educativo · não substitui parecer médico</div>
+  </footer>
+</main>
+
+<!-- Three.js -->
+<script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+<script src="brain.js"></script>
+<script>
+(function () {
+  const stage = document.getElementById('brain-canvas');
+  const brain = window.BrainViz.mount(stage);
+  const rotOut = document.getElementById('rot-readout');
+
+  // Auto-rotate the brain — gentle, continuous, "wow factor".
+  let auto = 0;
+  let lastT = performance.now();
+  let scrollOffset = 0;
+  let userInteracting = false;
+  let userInteractEndAt = 0;
+
+  // Detect user drag interaction (brain.js may use a global drag — fall back to canvas pointerdown).
+  stage.addEventListener('pointerdown', () => { userInteracting = true; });
+  window.addEventListener('pointerup', () => { userInteracting = false; userInteractEndAt = performance.now(); });
+
+  function tick() {
+    const now = performance.now();
+    const dt = Math.min(0.05, (now - lastT) / 1000);
+    lastT = now;
+    // pause auto-rotation while user is dragging or shortly after
+    const sinceUser = now - userInteractEndAt;
+    if (!userInteracting && sinceUser > 600) {
+      auto += dt * 0.32; // radians/sec
+    }
+    const rotY = auto + scrollOffset;
+    brain.setRotation(rotY, -0.06);
+    if (rotOut) rotOut.textContent = 'θ ' + (((rotY * 57.2958) % 360 + 360) % 360).toFixed(1) + '°';
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  // Cycle through brain regions for ambient interest (only when hero is visible)
+  const regions = ['frontal','parietal','temporal','occipital','cerebelo','tronco'];
+  let regionIdx = 0;
+  function cycleRegion() {
+    const hero = document.querySelector('.hero');
+    const heroRect = hero.getBoundingClientRect();
+    if (heroRect.bottom > 100) {
+      brain.setRegion(regions[regionIdx]);
+      regionIdx = (regionIdx + 1) % regions.length;
+    } else {
+      brain.setRegion(null);
+    }
+  }
+  cycleRegion();
+  setInterval(cycleRegion, 2600);
+
+  // ===== nav scroll-spy & progress =====
+  const sections = [...document.querySelectorAll('section.s')];
+  const navLinks = [...document.querySelectorAll('#nav a')];
+  const progress = document.getElementById('progress');
+
+  function updateScroll() {
+    const scrollY = window.scrollY;
+    const dh = document.documentElement.scrollHeight - window.innerHeight;
+    const p = Math.max(0, Math.min(1, scrollY / dh));
+    progress.style.width = (p * 100) + '%';
+
+    // small scroll-driven rotation of the brain — keeps it alive on hero
+    scrollOffset = (scrollY / window.innerHeight) * 0.4;
+
+    const probe = window.innerHeight * 0.35 + scrollY;
+    let current = sections[0];
+    for (let i = 0; i < sections.length; i++) {
+      if (sections[i].offsetTop <= probe) current = sections[i];
+    }
+    navLinks.forEach(a => a.classList.toggle('active', a.dataset.target === current.id));
+  }
+  window.addEventListener('scroll', updateScroll, { passive: true });
+  window.addEventListener('resize', updateScroll);
+  updateScroll();
+
+  // smooth scroll on nav click
+  navLinks.forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const el = document.getElementById(a.dataset.target);
+      if (el) window.scrollTo({ top: el.offsetTop - 50, behavior: 'smooth' });
+    });
+  });
+})();
+</script>
+</body>
+</html>

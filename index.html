@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cérebro que Salva Vidas — Morte Encefálica e Doação de Órgãos</title>
+<link rel="stylesheet" href="site-styles.css">
+<style>
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+.brain-interactive{position:relative;background:var(--bg-soft);border:1px solid var(--border);border-radius:20px;overflow:hidden;min-height:560px;margin-top:32px}
+.brain-interactive #brain-canvas-interactive{position:absolute;inset:0;cursor:grab}
+.two-region{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.two-region>div{padding:32px 28px;border-right:1px solid var(--border)}
+.two-region>div:last-child{border-right:none}
+@media(max-width:800px){.two-region{grid-template-columns:1fr}.two-region>div{border-right:none;border-bottom:1px solid var(--border)}.two-region>div:last-child{border-bottom:none}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="topbar dark-mode">
+  <a href="#" class="brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+    </div>
+    <span class="brand-name">Cérebro <span>que Salva Vidas</span></span>
+  </a>
+  <nav class="nav-desktop">
+    <a class="nav-link" data-target="conceito" href="#conceito" data-comment-anchor="704a456169-a">Conceito</a>
+    <a class="nav-link" data-target="diagnostico" href="#diagnostico">Diagnóstico</a>
+    <a class="nav-link" data-target="perguntas" href="#perguntas">Perguntas</a>
+    <a class="nav-link" data-target="cerebro" href="#cerebro">Cérebro</a>
+    <a class="nav-link" data-target="doacao" href="#doacao">Doação</a>
+    <a class="nav-link" data-target="dados" href="#dados">Dados</a>
+    <a class="nav-link" data-target="sobre" href="#sobre">Sobre</a>
+  </nav>
+  <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+</header>
+<div class="mobile-menu">
+  <a class="nav-link" data-target="conceito" href="#conceito">Conceito</a>
+  <a class="nav-link" data-target="diferencas" href="#diferencas">Diferenças</a>
+  <a class="nav-link" data-target="diagnostico" href="#diagnostico">Diagnóstico</a>
+  <a class="nav-link" data-target="reflexos" href="#reflexos">Reflexos</a>
+  <a class="nav-link" data-target="exames" href="#exames">Exames</a>
+  <a class="nav-link" data-target="paises" href="#paises">Países</a>
+  <a class="nav-link" data-target="perguntas" href="#perguntas">Perguntas</a>
+  <a class="nav-link" data-target="cerebro" href="#cerebro">Cérebro</a>
+  <a class="nav-link" data-target="dados" href="#dados">Dados</a>
+  <a class="nav-link" data-target="doacao" href="#doacao">Doação</a>
+  <a class="nav-link" data-target="sobre" href="#sobre">Sobre Nós</a>
+</div>
+<div class="progress-bar"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow"><span class="bar"></span>Morte encefálica &amp; doação<span class="bar"></span></div>
+    <h1>O cérebro que<br><em>salva vidas</em>.</h1>
+    <p class="hero-sub">Entenda como a neuroanatomia está ligada à doação de órgãos e como uma decisão pode transformar muitas histórias.</p>
+    <div class="hero-buttons">
+      <a href="#conceito" class="btn btn--primary">Entenda Mais</a>
+      <a href="#doacao" class="btn btn--outline">Seja um Doador</a>
+    </div>
+  </div>
+  <div class="hero-brain">
+    <div id="brain-canvas"></div>
+    <div class="hero-brain-hint">Arraste para girar · Clique para explorar</div>
+  </div>
+  <div class="scroll-cta"><span>Role para começar</span><span class="arrow"></span></div>
+</section>
+
+<main>
+
+<!-- 02 CONCEITO -->
+<section class="section section--alt" id="conceito" data-nav-section="conceito">
+  <div class="container">
+    <div class="sec-header fade-in">
+      <div class="tag-line"><span class="tag">01 · Conceito</span></div>
+      <h2>A cessação <span class="accent-text">irreversível</span> de todas as funções cerebrais.</h2>
+      <p class="lead">A morte encefálica (ME) é definida como a cessação irreversível de todas as funções cerebrais, incluindo as do tronco encefálico.</p>
+    </div>
+    <div class="grid grid-3 fade-in" style="margin-bottom:48px">
+      <div class="card card--accent"><div class="card-number">01</div><h4>Coma ou ausência de resposta</h4><p>Estado de inconsciência profunda, sem qualquer resposta a estímulos externos.</p></div>
+      <div class="card card--accent"><div class="card-number">02</div><h4>Ausência de reflexos do tronco</h4><p>Todos os reflexos do tronco — pupilar, corneano, oculocefálico, oculovestibular, tosse e deglutição — estão abolidos.</p></div>
+      <div class="card card--accent"><div class="card-number">03</div><h4>Apneia</h4><p>Ausência de respiração espontânea, mesmo sob estímulo máximo do centro respiratório.</p></div>
+    </div>
+    <div class="fade-in">
+      <h3>Origem histórica</h3>
+      <p style="margin-top:12px">Foi com <strong>tafofobia (medo de ser enterrado vivo)</strong> que surgiu a necessidade de confirmar o óbito do indivíduo. Segundo Greer et al. (2020) publicado no <em>JAMA</em>, a morte encefálica é o estado no qual ocorre a perda completa das funções do cérebro e do tronco encefálico, sendo irreversível e diagnosticada por critérios clínicos rigorosos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 03 DIFERENÇAS -->
+<section class="section" id="diferencas" data-nav-section="diferencas">
+  <div class="container">
+    <div class="sec-header fade-in">
+      <div class="tag-line"><span class="tag">02 · Diferenças</span></div>
+      <h2>Coma, Estado Vegetativo e <span class="accent-text">Morte Encefálica</span>.</h2>
+    </div>
+    <div class="compare-grid fade-in" style="margin-bottom:40px">
+      <div class="compare-col">
+        <div class="tag" style="margin-bottom:8px">Quadro 01</div>
+        <div class="compare-title">Coma</div>
+        <p>Estado de profunda inconsciência e falta de resposta a estímulos, frequentemente causado por disfunção do <strong>SARA</strong>. O paciente pode manter reflexos do tronco encefálico e ter potencial de recuperação.</p>
+      </div>
+      <div class="compare-col">
+        <div class="tag" style="margin-bottom:8px">Quadro 02</div>
+        <div class="compare-title">Estado Vegetativo</div>
+        <p>Destruição do córtex e hemisférios, mas o tronco encefálico permanece íntegro. O paciente continua respirando espontaneamente.</p>
+      </div>
+      <div class="compare-col compare-col--highlight">
+        <div class="tag" style="margin-bottom:8px">Quadro 03</div>
+        <div class="compare-title accent">Morte Encefálica</div>
+        <p><strong>Perda total e permanente de todas as funções do encéfalo</strong>, incluindo os centros vitais do tronco que controlam a respiração.</p>
+      </div>
+    </div>
+    <div class="img-block fade-in"><img src="uploads/IMG_2476.PNG" alt="Diferenças no cérebro"></div>
+  </div>
+</section>
+
+<!-- 04 DIAGNÓSTICO -->
+<section class="section section--alt" id="diagnostico" data-nav-section="diagnostico">
+  <div class="container">
+    <div class="sec-header fade-in">
+      <div class="tag-line"><span class="tag">03 · Diagnóstico</span></div>
+      <h2>Como o diagnóstico é <span class="accent-text">feito</span>.</h2>
+      <p class="lead">O diagnóstico é estritamente clínico e segue etapas rigorosas:</p>
+    </div>
+    <div class="step-list fade-in">
+      <div class="step-item"><div class="step-num">01</div><div><h4>Pré-requisitos</h4><p>Causa conhecida e irreversível, como trauma grave ou hemorragia intracraniana.</p></div></div>
+      <div class="step-item"><div class="step-num">02</div><div><h4>Exclusão de fatores confundidores</h4><p>Descartar distúrbios metabólicos graves, intoxicação por drogas (ao menos 5 meias-vidas), bloqueio neuromuscular e hipotermia (temp. central &gt;36°C).</p></div></div>
+      <div class="step-item"><div class="step-num">03</div><div><h4>Exame Clínico</h4><p>Realização de testes de reflexos de tronco e o teste de apneia.</p></div></div>
+      <div class="step-item"><div class="step-num">04</div><div><h4>Período de Observação</h4><p>Tempo de espera para garantir a irreversibilidade, variando conforme idade e jurisdição.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 REFLEXOS -->
+<section class="section" id="reflexos" data-nav-section="reflexos">
+  <div class="container">
+    <div class="sec-header fade-in">
+      <div class="tag-line"><span class="tag">04 · Reflexos</span></div>
+      <h2 data-comment-anchor="b7a8697dbf-h2">Quais reflexos são <span class="accent-text">testados</span>?</h2>
+      <p class="lead">Os testes avaliam a integridade dos nervos cranianos e do tronco encefálico:</p>
+    </div>
+    <div class="reflex-grid fade-in" style="margin-bottom:40px">
+      <div class="reflex-item"><div class="tag" style="margin-bottom:6px">01</div><h4>Reflexo Fotomotor</h4><p style="margin:6px 0">Ausência de reação das pupilas à luz.</p><div class="reflex-nerves">Nervos II e III</div></div>
+      <div class="reflex-item"><div class="tag" style="margin-bottom:6px">02</div><h4>Reflexo Corneano</h4><p style="margin:6px 0">Ausência de resposta ao tocar a córnea.</p><div class="reflex-nerves">Nervos V e VII</div></div>
+      <div class="reflex-item"><div class="tag" style="margin-bottom:6px">03</div><h4>Oculocefálico</h4><p style="margin:6px 0">Ausência de movimento ocular ao girar a cabeça.</p><div class="reflex-nerves">Nervos VIII, III e VI</div></div>
+      <div class="reflex-item"><div class="tag" style="margin-bottom:6px">04</div><h4>Oculovestibular</h4><p style="margin:6px 0">Ausência de movimento dos olhos após irrigação com água gelada.</p><div class="reflex-nerves">Nervos VIII, III e VI</div></div>
+      <div class="reflex-item"><div class="tag" style="margin-bottom:6px">05</div><h4>Tosse e Deglutição</h4><p style="margin:6px 0">Ausência de resposta à estimulação da faringe e traqueia.</p><div class="reflex-nerves">Nervos IX e X</div></div>
+      <div class="reflex-item"><div class="tag" style="margin-bottom:6px">06</div><h4>Resposta Motora</h4><p style="margin:6px 0">Ausência de resposta motora cerebral a estímulos dolorosos.</p><div class="reflex-nerves">Origem cerebral</div></div>
+    </div>
+    <div class="img-block fade-in"><img src="uploads/IMG_2551.PNG" alt="Guia prático dos testes neurológicos"></div>
+  </div>
+</section>
+
+<!-- 06 EXAMES -->
+<section class="section section--alt" id="exames" data-nav-section="exames">
+  <div class="container">
+    <div class="sec-header fade-in">
+      <div class="tag-line"><span class="tag">05 · Exames complementares</span></div>
+      <h2 data-comment-anchor="5854b41fd4-h2">Exames complementares para o <span class="accent-text">diagnóstico</span>.</h2>
+      <p class="lead">São utilizados quando o exame clínico ou o teste de apneia não podem ser completados ou quando há incerteza diagnóstica. Eles são divididos em dois tipos:</p>
+    </div>
+    <div class="exam-group fade-in" style="margin:32px 0">
+      <div class="exam-block">
+        <div class="tag" style="margin-bottom:12px">Tipo 01</div>
+        <h4>Fluxo Sanguíneo Cerebral</h4>
+        <ul>
+          <li><div><strong>Angiografia Digital</strong> <span class="exam-note">(Padrão Ouro)</span></div></li>
+          <li><div><strong>Cintilografia</strong> <span class="exam-note">(SPECT)</span></div></li>
+          <li><div><strong>Doppler Transcraniano</strong></div></li>
+          <li><div><strong>Angiotomografia</strong></div></li>
+        </ul>
+      </div>
+      <div class="exam-block">
+        <div class="tag" style="margin-bottom:12px">Tipo 02</div>
+        <h4>Atividade Elétrica</h4>
+        <ul>
+          <li><div><strong>Eletroencefalograma (EEG)</strong> <span class="exam-note">silêncio eletrocerebral</span></div></li>
+          <li><div><strong>Potenciais Evocados Somatossensoriais</strong></div></li>
+        </ul>
+      </div>
+    </div>
+    <div class="img-block fade-in"><img src="uploads/IMG_2612.PNG" alt="Técnicas complementares"></div>
+  </div>
+</section>
+
+<!-- 07 PAÍSES -->
+<section class="section" id="paises" data-nav-section="paises" data-comment-anchor="71bec6d89a-section">
+  <div class="container">
+    <div class="sec-header fade-in">
+      <div class="tag-line"><span class="tag">06 · Quem diagnostica</span></div>
+      <h2>A regra varia, <span class="accent-text">o rigor não</span>.</h2>
+    </div>
+    <div class="country-grid fade-in">
+      <div class="country-card"><div class="country-flag">EUA</div><h4>Estados Unidos</h4><p>Médicos atendentes competentes; necessário apenas um exame em adultos.</p></div>
+      <div class="country-card"><div class="country-flag">Índia</div><h4>Índia</h4><p>ME certificada por quatro médicos, sendo um neurologista ou neurocirurgião obrigatoriamente.</p></div>
+      <div class="country-card"><div class="country-flag">Brasil</div><h4>Brasil</h4><p>A constatação da morte encefálica deverá ser feita por médicos com capacitação específica, observando o protocolo estabelecido que define critérios precisos, padronizados e passíveis de serem realizados em todo território nacional. Serão feitos dois exames clínicos com intervalos variados, realizados por médicos diferentes.</p></div>
+    </div>
+    <div class="fade-in" style="margin-top:40px">
+      <h3 style="margin-bottom:20px">O protocolo no Brasil</h3>
+      <div class="grid grid-2" style="gap:24px">
+        <div class="card" style="text-align:center;padding:40px 28px">
+          <svg viewBox="0 0 48 48" width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin:0 auto 16px"><circle cx="24" cy="24" r="22" stroke="var(--accent)" stroke-width="2.5" fill="rgba(124,58,237,0.06)"/><path d="M24 14v14" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="34" r="2" fill="var(--accent)"/></svg>
+          <p><strong>A doação dos órgãos e tecidos só poderá ser realizada no caso de paciente em morte encefálica ou parada cardiorrespiratória, se houver <em>autorização de um familiar</em>, como previsto em lei.</strong> Se os familiares não autorizarem, a doação não poderá ser realizada.</p>
+        </div>
+        <div class="card" style="text-align:center;padding:40px 28px">
+          <svg viewBox="0 0 48 48" width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin:0 auto 16px"><circle cx="24" cy="24" r="22" stroke="var(--accent)" stroke-width="2.5" fill="rgba(124,58,237,0.06)"/><path d="M24 14v14" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="34" r="2" fill="var(--accent)"/></svg>
+          <p><strong>O protocolo dá segurança à equipe médica para o diagnóstico da morte encefálica</strong> e possibilita a imediata conversa com a família sobre a doação de órgãos.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 PERGUNTAS -->
+<section class="section section--alt" id="perguntas" data-nav-section="perguntas">
+  <div class="container">
+    <div class="sec-header fade-in">
+      <div class="tag-line"><span class="tag">07 · Perguntas frequentes</span></div>
+      <h2>O que perguntam, e o que <span class="accent-text">respondemos</span>.</h2>
+    </div>
+    <div class="faq-list fade-in">
+      <details class="faq-item" open>
+        <summary><span>O que significa "morte encefálica"?</span><span class="faq-icon">+</span></summary>
+        <div class="faq-answer"><p>Morte encefálica é a definição legal de morte. É a completa e irreversível parada de todas as funções do cérebro. Como resultado de severa agressão ou ferimento grave no cérebro, o sangue que supre o cérebro é bloqueado e o cérebro morre. A morte encefálica é permanente e irreversível.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary data-comment-anchor="75f5e899a4-summary"><span>Como é decidido que nosso ente querido está com morte encefálica?</span><span class="faq-icon">+</span></summary>
+        <div class="faq-answer"><p>O diagnóstico de morte encefálica é estabelecido por um médico por meio de protocolos clínicos rigorosos e baseados em normas médicas consolidadas. O procedimento inclui exames para confirmar que o paciente não apresenta mais reflexos cerebrais e perdeu a capacidade de respirar de forma autônoma. Geralmente, para assegurar a precisão absoluta, os testes são realizados duas vezes com um intervalo de algumas horas entre eles.</p><p>Além da avaliação clínica, podem ser feitos exames adicionais, como o angiograma cerebral (que avalia o fluxo sanguíneo no cérebro) ou o eletroencefalograma (que mede a atividade elétrica cerebral). Esses testes servem para confirmar que não há circulação de sangue ou atividade elétrica no órgão. É importante observar que o paciente ainda pode apresentar movimentos ou contrações musculares involuntárias; estes são chamados de reflexos espinhais. Tais movimentos são causados por impulsos elétricos que partem da coluna vertebral e podem ocorrer mesmo após a morte do cérebro. Os familiares podem solicitar ao médico explicações detalhadas ou demonstrações de como o diagnóstico foi concluído.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span>O que acontece enquanto os testes estão sendo feitos?</span><span class="faq-icon">+</span></summary>
+        <div class="faq-answer" data-comment-anchor="78cd3be2d5-div"><p>Enquanto os testes são conduzidos, o paciente é mantido em um ventilador mecânico (aparelho que realiza a respiração artificial), permitindo que o corpo continue recebendo oxigênio. Também podem ser administrados medicamentos para estabilizar a pressão sanguínea e outras funções biológicas. Esse suporte é mantido durante todo o protocolo, mas não interfere na precisão da determinação da morte encefálica.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span>Drogas podem dar um falso diagnóstico?</span><span class="faq-icon">+</span></summary>
+        <div class="faq-answer"><p>Algumas substâncias, como sedativos e relaxantes musculares, podem mascarar a real função cerebral. Os médicos aguardam a redução dos níveis dessas drogas no organismo. Exames complementares adicionais são realizados para validar o resultado.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span>Se está morto, por que o coração ainda bate?</span><span class="faq-icon">+</span></summary>
+        <div class="faq-answer"><p>O coração funciona enquanto houver oferta de oxigênio, que é fornecida artificialmente pelo ventilador. Sem esse suporte, o coração pararia de bater em pouco tempo, pois o comando cerebral para a vida foi perdido.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span>Há mais alguma coisa que possa ser feita?</span><span class="faq-icon">+</span></summary>
+        <div class="faq-answer"><p>Antes do diagnóstico, todos os esforços médicos são utilizados. Uma vez confirmado, não existe possibilidade de recuperação. Apesar da aparência — corpo aquecido, cor natural — o indivíduo está, técnica e legalmente, morto.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span>O que acontece após a declaração?</span><span class="faq-icon">+</span></summary>
+        <div class="faq-answer" data-comment-anchor="4d3606f88e-div"><p>A morte encefálica costuma ser o resultado de lesões ou acidentes súbitos. Após a declaração formal do óbito, profissionais de saúde auxiliam a família nas decisões imediatas que precisam ser tomadas. As principais opções apresentadas são a doação de órgãos e tecidos ou a interrupção do suporte respiratório. É importante esclarecer que, como o paciente já é considerado legalmente morto no momento do diagnóstico, a remoção do ventilador não é a causa do falecimento, mas apenas a retirada de um suporte artificial.</p></div>
+      </details>
+    </div>
+    <div class="img-block fade-in" style="margin-top:40px"><img src="uploads/IMG_2636.jpg" alt="Guia para Famílias"></div>
+  </div>
+</section>
+
+<!-- 09 PARTES DO CÉREBRO -->
+<section class="section" id="cerebro" data-nav-section="cerebro">
+  <div class="container">
+    <div class="sec-header fade-in">
+      <div class="tag-line"><span class="tag">08 · Neuroanatomia interativa</span></div>
+      <h2>Quais partes param na <span class="accent-text">morte encefálica</span>?</h2>
+      <p class="lead">Todas as partes do encéfalo têm suas funções interrompidas de forma definitiva e irreversível.</p>
+    </div>
+    <div class="two-region fade-in" style="margin-bottom:40px">
+      <div><div class="tag" style="margin-bottom:10px">Área 01</div><h3>O Cérebro</h3><p style="font-size:13px;color:var(--text-3);margin-bottom:10px">Telencéfalo e Diencéfalo</p><p>Responsável pela consciência, sentimentos, movimentos voluntários, memória e interpretação dos sentidos.</p></div>
+      <div><div class="tag" style="margin-bottom:10px">Área 02</div><h3>O Tronco Encefálico</h3><p style="font-size:13px;color:var(--text-3);margin-bottom:10px">Controle vital autônomo</p><p>Responsável pelas funções vitais: respiração, batimentos cardíacos, pressão arterial e reflexos básicos.</p></div>
+    </div>
+    <p class="fade-in" style="text-align:center;color:var(--text-3);margin-bottom:16px;font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase">Explore o modelo 3D · Clique nas regiões</p>
+    <div class="brain-interactive fade-in">
+      <div id="brain-canvas-interactive"></div>
+      <div class="region-legend" id="region-legend">
+        <button class="legend-btn" data-r="frontal"><span class="legend-swatch" style="background:#76d3c4"></span>Frontal</button>
+        <button class="legend-btn" data-r="parietal"><span class="legend-swatch" style="background:#6fb8d4"></span>Parietal</button>
+        <button class="legend-btn" data-r="temporal"><span class="legend-swatch" style="background:#c9a273"></span>Temporal</button>
+        <button class="legend-btn" data-r="occipital"><span class="legend-swatch" style="background:#8a7fb8"></span>Occipital</button>
+        <button class="legend-btn" data-r="cerebelo"><span class="legend-swatch" style="background:#b87f8a"></span>Cerebelo</button>
+        <button class="legend-btn" data-r="tronco"><span class="legend-swatch" style="background:#d97757"></span>Tronco</button>
+      </div>
+      <div class="region-readout empty" id="region-readout">
+        <div class="tag">Região em foco</div>
+        <h4 class="readout-name">Passe o cursor sobre o cérebro</h4>
+        <p class="readout-desc">Clique em qualquer região para ver sua descrição.</p>
+      </div>
+    </div>
+    <div class="img-block fade-in" style="margin-top:40px"><img src="uploads/IMG_2549.PNG" alt="Cérebro Ativo vs Morte Encefálica"></div>
+  </div>
+</section>
+
+<!-- 10 DADOS -->
+<section class="section section--alt" id="dados" data-nav-section="dados">
+  <div class="container">
+    <div class="sec-header fade-in">
+      <div class="tag-line"><span class="tag">09 · Dados</span></div>
+      <h2>Números que <span class="accent-text">importam</span>.</h2>
+    </div>
+    <div class="stat-grid fade-in" style="margin-bottom:40px">
+      <div class="stat-item"><div class="stat-num">42,8 <small>pmp</small></div><div class="stat-label">Santa Catarina · 2025</div><p>SC liderou o ranking nacional de doadores efetivos por milhão de população.</p></div>
+      <div class="stat-item"><div class="stat-num">~40 <small>pmp</small></div><div class="stat-label">SC e PR</div><p>Taxas comparáveis às de países europeus líderes em doação.</p></div>
+      <div class="stat-item"><div class="stat-num" style="color:var(--accent-green)">32%</div><div class="stat-label">Recusa familiar SC · 2025</div><p>Taxa de não autorização familiar caiu de 70% (2007) para 32% (2025) em SC.</p></div>
+      <div class="stat-item" data-comment-anchor="6c7e96acdf-div"><div class="stat-num" style="color:var(--accent-amber)">AVC</div><div class="stat-label">Principal causa</div><p>AVC (Acidente Vascular Cerebral) é a principal causa de ME, somando os tipos isquêmico e hemorrágico (este último com grande incidência em casos de ME). TCE (Traumatismo Cranioencefálico) é a segunda causa principal, geralmente decorrente de acidentes de trânsito (especialmente envolvendo motocicletas) e quedas.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 DOAÇÃO -->
+<section class="section" id="doacao" data-nav-section="doacao">
+  <div class="container" data-comment-anchor="c05b9895ce-div">
+    <div class="sec-header fade-in">
+      <div class="tag-line"><span class="tag">10 · Doação de órgãos</span></div>
+      <h2 data-comment-anchor="f1b352686e-h2">Doação de <span class="accent-text">Órgãos</span>.</h2>
+    </div>
+    <div class="fade-in" style="margin-bottom:48px">
+      <h3 style="margin-bottom:16px">O que é a doação de órgãos?</h3>
+      <p style="font-size:18px;line-height:1.7">A doação de órgãos é o ato de ceder órgãos ou tecidos saudáveis de uma pessoa viva ou falecida para outra que precisa de um transplante.</p>
+    </div>
+    <h3 class="fade-in" style="margin-bottom:20px">Como a doação de órgãos acontece no Brasil?</h3>
+    <p class="fade-in" style="margin-bottom:24px">Existem algumas etapas importantes sobre a doação de órgãos no Brasil:</p>
+    <div class="step-list fade-in" data-comment-anchor="12cb9536a9-div" style="margin-bottom:48px">
+      <div class="step-item">
+        <div class="step-num">01</div>
+        <div>
+          <h4>Autorização da família</h4>
+          <p>A família precisa autorizar o procedimento de doação de órgãos, quando acontece em caso de morte encefálica do ente. Por isso, a família é informada sobre a morte encefálica e sobre o desejo de doar ou não os órgãos saudáveis desse paciente.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">02</div>
+        <div>
+          <h4>Avaliação médica</h4>
+          <p>A equipe médica avalia as condições dos órgãos para entender as possibilidades de doação e compatibilidade dos possíveis receptores.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">03</div>
+        <div>
+          <h4>Confirmação da Morte Encefálica</h4>
+          <p>A doação de órgãos por morte encefálica só é permitida quando o diagnóstico é confirmado por meio dos testes necessários e quando é confirmado o não funcionamento irreversível do cérebro.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">04</div>
+        <div>
+          <h4>Cirurgia de retirada dos órgãos</h4>
+          <p>Quando a família autoriza a doação, os órgãos são retirados por uma equipe médica especializada, com todo cuidado para garantir a preservação e manter a qualidade do órgão que fará parte da vida de outro paciente.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">05</div>
+        <div>
+          <h4>Preservação e transporte</h4>
+          <p>Os órgãos são devidamente preservados e transportados para os hospitais em que serão realizados os transplantes. É necessário que isso seja feito de forma rápida e segura, para garantir a sua viabilidade.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">06</div>
+        <div>
+          <h4>Transplante</h4>
+          <p>Os órgãos doados são destinados a pessoas que estão na fila de espera por um transplante, passaram por avaliações médicas e são compatíveis com o doador. Assim, a cirurgia é realizada.</p>
+        </div>
+      </div>
+    </div>
+    <h3 class="fade-in" style="margin-bottom:20px">Quais órgãos podem ser doados?</h3>
+    <div class="organs-grid fade-in" style="margin-bottom:32px">
+      <div class="organ-item"><div class="organ-icon" style="border:none;width:48px;height:48px"><svg viewBox="0 0 48 48" width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 6c-4 0-7 3-9 7-3 5-4 11-3 15 1 5 4 9 7 11 2 2 4 3 5 3s3-1 5-3c3-2 6-6 7-11 1-4 0-10-3-15-2-4-5-7-9-7z" fill="#EF4444" opacity=".85"/><path d="M24 6c-2 0-4 1-6 4-2 3-3 6-3 6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity=".5"/></svg></div><div class="organ-name">Coração</div></div>
+      <div class="organ-item"><div class="organ-icon" style="border:none;width:48px;height:48px"><svg viewBox="0 0 48 48" width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="16" cy="24" rx="10" ry="14" fill="#60A5FA" opacity=".8"/><ellipse cx="32" cy="24" rx="10" ry="14" fill="#60A5FA" opacity=".8"/><path d="M24 12v24" stroke="#3B82F6" stroke-width="2"/><path d="M20 18c2-2 6-2 8 0" stroke="#fff" stroke-width="1" opacity=".5"/></svg></div><div class="organ-name">Pulmões</div></div>
+      <div class="organ-item" data-comment-anchor="8c1f58f67b-div"><div class="organ-icon" style="border:none;width:48px;height:48px"><svg viewBox="0 0 48 48" width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 14c0 0-2 2-2 8s1 12 4 14c3 2 8 3 12 2s7-4 8-8c1-4 0-10-2-14-1-3-4-6-8-6-3 0-5 1-6 2s-3-1-6 2z" fill="#A855F7" opacity=".75"/><path d="M22 16c-1 2-1 6 0 10" stroke="#fff" stroke-width="1" opacity=".5"/></svg></div><div class="organ-name">Fígado</div></div>
+      <div class="organ-item"><div class="organ-icon" style="border:none;width:48px;height:48px"><svg viewBox="0 0 48 48" width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="17" cy="24" rx="8" ry="11" fill="#F59E0B" opacity=".8" transform="rotate(-10 17 24)"/><ellipse cx="31" cy="24" rx="8" ry="11" fill="#F59E0B" opacity=".8" transform="rotate(10 31 24)"/><path d="M17 18v12M31 18v12" stroke="#fff" stroke-width="1" opacity=".4"/></svg></div><div class="organ-name">Rins</div></div>
+      <div class="organ-item"><div class="organ-icon" style="border:none;width:48px;height:48px"><svg viewBox="0 0 48 48" width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="24" cy="24" rx="12" ry="8" fill="#10B981" opacity=".8"/><ellipse cx="24" cy="24" rx="6" ry="4" fill="#10B981" opacity=".5"/><path d="M12 24h24" stroke="#fff" stroke-width="1" opacity=".4"/></svg></div><div class="organ-name">Pâncreas</div></div>
+      <div class="organ-item"><div class="organ-icon" style="border:none;width:48px;height:48px"><svg viewBox="0 0 48 48" width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 12c-2 4-2 8 0 12s2 8 0 12" stroke="#EC4899" stroke-width="3" stroke-linecap="round" fill="none"/><path d="M24 12c-2 4-2 8 0 12s2 8 0 12" stroke="#EC4899" stroke-width="3" stroke-linecap="round" fill="none" opacity=".7"/><path d="M34 12c-2 4-2 8 0 12s2 8 0 12" stroke="#EC4899" stroke-width="3" stroke-linecap="round" fill="none" opacity=".5"/></svg></div><div class="organ-name">Intestino</div></div>
+      <div class="organ-item"><div class="organ-icon" style="border:none;width:48px;height:48px"><svg viewBox="0 0 48 48" width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="24" cy="24" rx="14" ry="14" fill="#38BDF8" opacity=".2" stroke="#38BDF8" stroke-width="2"/><circle cx="24" cy="24" r="6" fill="#38BDF8" opacity=".6"/><circle cx="24" cy="24" r="2" fill="#0EA5E9"/></svg></div><div class="organ-name">Córneas</div></div>
+      <div class="organ-item"><div class="organ-icon" style="border:none;width:48px;height:48px"><svg viewBox="0 0 48 48" width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="12" width="28" height="24" rx="6" fill="#FBBF24" opacity=".3" stroke="#F59E0B" stroke-width="2"/><path d="M16 20h16M16 26h12M16 32h8" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" opacity=".6"/></svg></div><div class="organ-name">Pele</div></div>
+    </div>
+    <p class="fade-in" style="color:var(--text-2);margin-bottom:32px">Além desses, diversos tecidos também podem ser doados, como: <strong>ossos</strong> e <strong>válvulas cardíacas</strong>.</p>
+    <div class="fade-in" style="margin-bottom:40px">
+      <h3 style="margin-bottom:16px">Quem pode ser doador de órgãos?</h3>
+      <p>Qualquer pessoa pode ser doador de órgãos em vida ou pós morte, desde que atenda aos requisitos:</p>
+      <div class="step-list" style="margin-top:20px">
+        <div class="step-item"><div class="step-num" style="font-size:24px">01</div><div><h4>Comunicar a vontade</h4><p>Ter registrado, em vida, a vontade de ser doador de órgãos e conversar com a família sobre essa vontade, já que é dependente disso para a autorização em caso de morte encefálica. Além de deixar esse registro em documentos como CNH e Identidade.</p></div></div>
+        <div class="step-item"><div class="step-num" style="font-size:24px">02</div><div><h4>Idade</h4><p>Cada órgão tem um limite de idade para doação, para que seja garantida sua qualidade. Por exemplo, o fígado pode ser doado até os 70 anos, enquanto a córnea não tem idade limite.</p></div></div>
+        <div class="step-item"><div class="step-num" style="font-size:24px">03</div><div><h4>Condição de saúde do doador</h4><p>É necessário que os órgãos estejam em condições adequadas para doação — o que é avaliado pela equipe médica.</p></div></div>
+      </div>
+    </div>
+    <div class="fade-in" style="margin-bottom:40px">
+      <h3 style="margin-bottom:16px">Saiba mais sobre a doação de órgãos</h3>
+      <div class="img-block"><img src="uploads/IMG_2689.PNG" alt="Verdades sobre a doação de órgãos"></div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO -->
+<section class="section section--dark" id="video" data-nav-section="video" data-comment-anchor="5f016bafc3-section">
+  <div class="container" style="text-align:center">
+    <div class="sec-header fade-in" style="margin-left:auto;margin-right:auto;text-align:center">
+      <div class="tag-line" style="justify-content:center"><span class="tag">Depoimento</span></div>
+      <h2>Entrevista com Especialista</h2>
+      <p class="lead" style="margin-left:auto;margin-right:auto">Vídeo em breve.</p>
+    </div>
+    <div class="fade-in" style="aspect-ratio:16/9;max-width:800px;margin:0 auto;background:rgba(255,255,255,0.06);border-radius:16px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.1)">
+      <p style="color:rgba(255,255,255,0.4);font-family:var(--mono);font-size:13px;letter-spacing:.1em">VÍDEO PLACEHOLDER — URL EM BREVE</p>
+    </div>
+  </div>
+</section>
+
+<!-- RELATO LINK -->
+<section class="section section--alt" id="relato" data-nav-section="relato">
+  <div class="container">
+    <div class="callout fade-in">
+      <img src="uploads/IMG_2690.PNG" alt="Gildo Souza — Perfil do Paciente" style="border-radius:12px;width:200px;height:auto;object-fit:contain">
+      <div class="callout-text">
+        <div class="tag" style="margin-bottom:8px">Relato de caso</div>
+        <h3>Gildo Souza — Transplantado Renal</h3>
+        <p style="margin:8px 0">Conheça a história de quem recebeu um rim e pôde voltar a sonhar. A entrevista completa está na página dedicada.</p>
+        <a href="relato.html" class="btn btn--outline-dark" style="margin-top:8px">Ler Relato Completo →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SÉRIE -->
+<section class="section" id="serie">
+  <div class="container">
+    <div class="callout fade-in">
+      <img src="uploads/IMG_2615.jpg" alt="Operação Transplante — HBO Max">
+      <div class="callout-text">
+        <div class="tag" style="margin-bottom:8px">Indicação · Série</div>
+        <h3>Operação Transplante — HBO Max</h3>
+        <p style="margin:8px 0">Série documental que acompanha o processo de transplantes no Brasil, mostrando a realidade dos pacientes e profissionais envolvidos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA DOADOR -->
+<section class="cta-banner">
+  <div class="container">
+    <h2>Seja um Doador de Órgãos</h2>
+    <p>Uma decisão que pode transformar até oito vidas.</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      <a href="https://www.gov.br/saude/pt-br/composicao/saes/snt" target="_blank" rel="noopener" class="btn">gov.br/snt ↗</a>
+      <a href="https://site.abto.org.br" target="_blank" rel="noopener" class="btn" style="background:rgba(255,255,255,0.2);color:#fff">ABTO ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE (movido para o final, conforme Matheus) -->
+<section class="section" id="sobre" data-nav-section="sobre">
+  <div class="container">
+    <div class="sec-header fade-in">
+      <div class="tag-line"><span class="tag">Quem somos</span></div>
+      <h2>Duas estudantes, um convite a entender.</h2>
+    </div>
+    <div class="fade-in" style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-bottom:40px">
+      <div>
+        <p style="font-size:18px;color:var(--text);line-height:1.7">Esse trabalho é composto por duas estudantes de medicina do primeiro período da Univali — Universidade do Alto Vale do Itajaí (SC).</p>
+        <p>Muito prazer, nos chamamos <strong>Bárbara Linhares Dutra</strong> e <strong>Maria Eduarda Santos</strong> e criamos esse site com o intuito de informar de maneira acessível, para quem busca saber mais, sobre a morte encefálica e a doação de órgãos no Brasil.</p>
+        <p>Neste site trouxemos dados e informações baseadas em artigos como <em>"MORTE ENCEFÁLICA E DOAÇÃO DE ÓRGÃOS E TECIDOS — BRAIN DEATH AND ORGAN DONATION"</em>, a fim de trazer os conceitos da melhor maneira — embasado em ciência e estudo.</p>
+      </div>
+      <div>
+        <div class="img-block"><img src="uploads/IMG_4457.JPG" alt="Bárbara e Maria Eduarda" style="aspect-ratio:4/3;object-fit:cover"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+          <div class="author-card" style="padding:14px"><div class="author-name" style="font-size:14px">Bárbara Linhares Dutra</div><div class="author-role">Medicina · 1º período</div></div>
+          <div class="author-card" style="padding:14px"><div class="author-name" style="font-size:14px">Maria Eduarda Santos</div><div class="author-role">Medicina · 1º período</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fade-in">
+      <p>O nosso público alvo é amplo, tendo em vista o tipo de linguagem que, apesar de formal, é compreensível pelas diversas esferas da sociedade, visto que o tema é importante em todo o cenário nacional e deve ser entendido e disseminado.</p>
+      <p>Nesse site explicaremos o passo a passo do diagnóstico da morte encefálica, bem como esclarecer dúvidas frequentes. Para isso, trouxemos vídeo de profissional da área da saúde: <strong>Bombeiro Alexandre Correa</strong>.</p>
+      <p>Além disso, na aba <em>"Relato de caso"</em>, trouxemos um relato de um paciente que realizou transplante de rim e compartilhou um pouco da sua história conosco.</p>
+    </div>
+    <div class="pullquote fade-in">
+      <p>Esperamos que nosso trabalho consiga atingir o objetivo principal: tornar esse assunto tão delicado e sensível, entendido por parte dos que lerem. Esperamos que nosso trabalho faça a diferença na vida de alguém!</p>
+      <cite>— As autoras</cite>
+    </div>
+  </div>
+</section>
+
+<!-- REFS -->
+<section class="section" id="refs" data-nav-section="refs">
+  <div class="container">
+    <div class="sec-header fade-in">
+      <div class="tag-line"><span class="tag">Fontes e referências</span></div>
+      <h2>Base científica.</h2>
+    </div>
+    <div class="ref-list fade-in">
+      <div class="ref-item"><div class="ref-num">[1]</div><div><a href="#">Greer et al. (2020). Determination of Brain Death/Death by Neurologic Criteria. JAMA.</a></div></div>
+      <div class="ref-item"><div class="ref-num">[2]</div><div><a href="#">MORTE ENCEFÁLICA E DOAÇÃO DE ÓRGÃOS E TECIDOS — BRAIN DEATH AND ORGAN DONATION.</a></div></div>
+      <div class="ref-item"><div class="ref-num">[3]</div><div><a href="#">Ministério da Saúde — Sistema Nacional de Transplantes (SNT).</a></div></div>
+      <div class="ref-item"><div class="ref-num">[4]</div><div><a href="https://site.abto.org.br">Associação Brasileira de Transplante de Órgãos (ABTO).</a></div></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">Cérebro que Salva Vidas</div>
+        <p class="footer-desc">Projeto acadêmico de Bárbara Linhares Dutra e Maria Eduarda Santos — Medicina, Univali.</p>
+      </div>
+      <div style="display:flex;gap:24px;flex-wrap:wrap">
+        <a href="https://www.gov.br/saude/pt-br/composicao/saes/snt" target="_blank" rel="noopener" style="color:var(--accent-light);font-size:14px">gov.br/snt</a>
+        <a href="https://site.abto.org.br" target="_blank" rel="noopener" style="color:var(--accent-light);font-size:14px">ABTO</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 · Trabalho acadêmico · Univali</span>
+      <span>Feito com propósito.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+<script src="brain.js"></script>
+<script src="site-scripts.js"></script>
+</body>
+</html>
