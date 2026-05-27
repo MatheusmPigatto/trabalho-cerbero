@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Morte Encefálica — neuroanatomia, diagnóstico e doação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<style>
+  :root {
+    --bg:       oklch(0.158 0.012 240);
+    --bg-2:     oklch(0.205 0.013 240);
+    --panel:    oklch(0.21 0.014 240);
+    --line:     oklch(0.32 0.014 240);
+    --line-2:   oklch(0.26 0.012 240);
+    --ink:      oklch(0.945 0.012 85);
+    --ink-2:    oklch(0.80 0.012 85);
+    --ink-3:    oklch(0.62 0.012 85);
+    --accent:   oklch(0.83 0.11 195);   /* bioluminescent teal */
+    --accent-2: oklch(0.78 0.12 50);    /* amber for critical */
+    --danger:   oklch(0.70 0.16 25);
+    --good:     oklch(0.80 0.13 155);
+    --serif: "Instrument Serif", "Times New Roman", serif;
+    --sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  /* subtle grid + grain on the body */
+  body::before {
+    content: "";
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      linear-gradient(to right, oklch(0.95 0.01 85 / 0.025) 1px, transparent 1px),
+      linear-gradient(to bottom, oklch(0.95 0.01 85 / 0.018) 1px, transparent 1px);
+    background-size: 96px 96px, 96px 96px;
+    mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, #000 50%, transparent 100%);
+  }
+  body::after {
+    content: "";
+    position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    background: radial-gradient(ellipse 70% 60% at 20% 30%, oklch(0.83 0.11 195 / 0.08), transparent 60%),
+                radial-gradient(ellipse 50% 50% at 90% 80%, oklch(0.78 0.12 50 / 0.05), transparent 60%);
+  }
+
+  /* ===== nav ===== */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 28px;
+    backdrop-filter: blur(12px);
+    background: oklch(0.158 0.012 240 / 0.78);
+    border-bottom: 1px solid var(--line-2);
+  }
+  .brand { display: flex; align-items: baseline; gap: 14px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-2); white-space: nowrap; flex-shrink: 0; }
+  .brand .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); flex: 0 0 7px; }
+  .brand b { font-family: var(--serif); font-style: italic; font-weight: 400; text-transform: none; font-size: 18px; letter-spacing: 0; color: var(--ink); white-space: nowrap; flex-shrink: 0; }
+  .brand .desc { display: inline-block; flex-shrink: 0; }
+  @media (max-width: 1180px) { .brand .desc { display: none; } }
+  nav.index { display: flex; gap: 4px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+  nav.index a {
+    color: var(--ink-3); text-decoration: none; padding: 8px 12px; border-radius: 2px;
+    transition: color 0.2s, background 0.2s;
+  }
+  nav.index a:hover { color: var(--ink); background: oklch(0.95 0.01 85 / 0.04); }
+  nav.index a.active { color: var(--accent); }
+  nav.index a .n { opacity: 0.5; margin-right: 6px; }
+  @media (max-width: 1280px) { nav.index a .n { display: none; } nav.index a { padding: 8px 10px; } }
+  @media (max-width: 1080px) { nav.index { font-size: 10px; } nav.index a { padding: 8px 7px; letter-spacing: 0.06em; } }
+
+  /* progress bar */
+  .progress {
+    position: fixed; top: 53px; left: 0; height: 1px;
+    background: linear-gradient(to right, var(--accent), oklch(0.83 0.11 195 / 0.3));
+    width: 0; z-index: 49;
+    transition: width 0.1s linear;
+  }
+
+  /* ===== layout ===== */
+  main { position: relative; z-index: 2; padding-top: 54px; }
+
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    min-height: calc(100vh - 54px);
+  }
+  .stage {
+    position: sticky; top: 54px;
+    height: calc(100vh - 54px);
+    overflow: hidden;
+    border-right: 1px solid var(--line-2);
+  }
+  .stage-inner {
+    position: absolute; inset: 0;
+  }
+  #brain-canvas {
+    position: absolute; inset: 0;
+    cursor: grab;
+  }
+
+  /* corner annotations on the stage */
+  .stage .marks {
+    position: absolute; inset: 24px; pointer-events: none;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-3);
+  }
+  .stage .marks .tl { position: absolute; top: 0; left: 0; }
+  .stage .marks .tr { position: absolute; top: 0; right: 0; text-align: right; }
+  .stage .marks .bl { position: absolute; bottom: 0; left: 0; }
+  .stage .marks .br { position: absolute; bottom: 0; right: 0; text-align: right; }
+  .stage .marks .v { color: var(--ink-2); }
+  .stage .marks small { display: block; color: var(--ink-3); font-size: 9px; margin-top: 3px; letter-spacing: 0.18em; }
+
+  .crosshair {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    width: 18px; height: 18px; pointer-events: none; opacity: 0.18;
+  }
+  .crosshair::before, .crosshair::after {
+    content: ""; position: absolute; background: var(--ink-2);
+  }
+  .crosshair::before { left: 50%; top: 0; bottom: 0; width: 1px; transform: translateX(-0.5px); }
+  .crosshair::after { top: 50%; left: 0; right: 0; height: 1px; transform: translateY(-0.5px); }
+
+  /* region readout overlay */
+  .readout {
+    position: absolute; left: 24px; bottom: 24px; z-index: 4;
+    max-width: 320px;
+    padding: 16px 18px;
+    background: oklch(0.18 0.013 240 / 0.78);
+    border: 1px solid var(--line-2);
+    backdrop-filter: blur(8px);
+  }
+  .readout .tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+  .readout .name { font-family: var(--serif); font-style: italic; font-size: 22px; line-height: 1.1; color: var(--ink); margin-bottom: 6px; }
+  .readout .desc { font-size: 13px; color: var(--ink-2); line-height: 1.45; }
+  .readout.empty .name { color: var(--ink-3); font-style: normal; font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; }
+
+  .legend {
+    position: absolute; right: 24px; top: 60px; z-index: 4;
+    display: flex; flex-direction: column; gap: 6px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .legend button {
+    all: unset;
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px;
+    color: var(--ink-3);
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+    border: 1px solid transparent;
+  }
+  .legend button:hover { color: var(--ink); background: oklch(0.95 0.01 85 / 0.03); }
+  .legend button.active { color: var(--ink); border-color: var(--line); background: oklch(0.95 0.01 85 / 0.04); }
+  .legend .sw { width: 9px; height: 9px; border-radius: 50%; }
+
+  /* ===== content side ===== */
+  .content {
+    padding: 0 64px 120px 64px;
+    max-width: 720px;
+  }
+  section.s {
+    padding: 120px 0 60px;
+    border-bottom: 1px solid var(--line-2);
+    scroll-margin-top: 60px;
+  }
+  section.s:last-of-type { border-bottom: none; }
+  section.s.hero { padding-top: 80px; }
+
+  .sec-tag {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+    display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+  }
+  .sec-tag .num { color: var(--ink-3); }
+  .sec-tag .line-d { flex: 1; height: 1px; background: var(--line-2); }
+
+  h1 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(48px, 6vw, 84px);
+    line-height: 0.95; letter-spacing: -0.02em;
+    margin: 0 0 28px;
+    color: var(--ink);
+  }
+  h1 em { font-style: italic; color: var(--accent); font-weight: 400; }
+  h2 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(34px, 3.8vw, 52px);
+    line-height: 1.02; letter-spacing: -0.015em;
+    margin: 0 0 24px;
+    color: var(--ink);
+  }
+  h2 em { font-style: italic; color: var(--ink-2); }
+  h3 {
+    font-family: var(--sans); font-weight: 500;
+    font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink); margin: 32px 0 12px;
+  }
+  p { margin: 0 0 18px; color: var(--ink-2); text-wrap: pretty; font-size: 16px; }
+  p.lead { font-size: 19px; line-height: 1.5; color: var(--ink); }
+  p strong { color: var(--ink); font-weight: 500; }
+  ul, ol { padding-left: 20px; color: var(--ink-2); margin: 0 0 18px; }
+  li { margin-bottom: 8px; }
+  a.inline { color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent); }
+
+  .byline {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-3); margin-bottom: 36px; display: flex; gap: 18px; flex-wrap: wrap;
+  }
+  .byline span b { color: var(--ink-2); font-weight: 400; }
+
+  /* pullquote */
+  .pull {
+    border-left: 2px solid var(--accent);
+    padding: 4px 0 4px 22px;
+    margin: 28px 0;
+    font-family: var(--serif); font-style: italic; font-size: 22px; line-height: 1.4;
+    color: var(--ink);
+  }
+  .pull cite { display: block; font-family: var(--mono); font-style: normal; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); margin-top: 12px; }
+
+  /* data cards / criteria */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 24px 0; }
+  .card {
+    border: 1px solid var(--line-2);
+    padding: 18px 18px 20px;
+    background: oklch(0.18 0.013 240 / 0.4);
+  }
+  .card .ic { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+  .card .num-big { font-family: var(--serif); font-size: 44px; line-height: 1; color: var(--accent); letter-spacing: -0.02em; }
+  .card .num-big.warn { color: var(--accent-2); }
+  .card .num-big.good { color: var(--good); }
+  .card .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); }
+  .card p { font-size: 13.5px; margin: 6px 0 0; color: var(--ink-2); line-height: 1.45; }
+
+  /* criteria list */
+  .crit {
+    display: grid; gap: 0; margin: 24px 0;
+    border-top: 1px solid var(--line-2);
+  }
+  .crit .row {
+    display: grid; grid-template-columns: 36px 1fr; gap: 16px; padding: 14px 0;
+    border-bottom: 1px solid var(--line-2);
+    align-items: start;
+  }
+  .crit .row .ix {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--accent);
+    padding-top: 2px;
+  }
+  .crit .row b { color: var(--ink); font-weight: 500; display: block; margin-bottom: 4px; font-size: 15px; }
+  .crit .row span { color: var(--ink-2); font-size: 14px; }
+
+  /* protocol steps */
+  .steps { margin: 24px 0; }
+  .step {
+    display: grid; grid-template-columns: 80px 1fr; gap: 24px;
+    padding: 18px 0; border-bottom: 1px solid var(--line-2);
+  }
+  .step:last-child { border-bottom: none; }
+  .step .marker {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; color: var(--ink-3);
+    text-transform: uppercase;
+  }
+  .step .marker b { display: block; font-family: var(--serif); font-style: italic; font-size: 32px; color: var(--accent); letter-spacing: -0.01em; margin-bottom: 4px; }
+  .step h4 { font-family: var(--sans); font-weight: 500; font-size: 17px; margin: 0 0 8px; color: var(--ink); }
+  .step p { margin: 0 0 6px; font-size: 14px; }
+  .step .meta { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin-top: 8px; }
+
+  /* coma vs ME table */
+  .compare {
+    margin: 24px 0;
+    border: 1px solid var(--line-2);
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+  }
+  .compare .h, .compare .c {
+    padding: 14px 16px; border-bottom: 1px solid var(--line-2); border-right: 1px solid var(--line-2);
+    font-size: 13px; color: var(--ink-2);
+  }
+  .compare > div:nth-child(3n) { border-right: none; }
+  .compare .h {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3);
+    background: oklch(0.21 0.014 240 / 0.6);
+  }
+  .compare .h.coma { color: var(--accent-2); }
+  .compare .h.me { color: var(--danger); }
+
+  /* myths */
+  .myths { margin: 24px 0; display: flex; flex-direction: column; gap: 0; }
+  .myth {
+    border-top: 1px solid var(--line-2);
+    padding: 18px 0;
+    display: grid; grid-template-columns: 70px 1fr; gap: 18px;
+  }
+  .myth:last-child { border-bottom: 1px solid var(--line-2); }
+  .myth .v {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    padding-top: 4px;
+  }
+  .myth .v.mito { color: var(--danger); }
+  .myth .v.fato { color: var(--good); }
+  .myth q { display: block; color: var(--ink); font-family: var(--serif); font-style: italic; font-size: 19px; margin-bottom: 6px; quotes: none; }
+  .myth q::before, .myth q::after { content: ""; }
+  .myth p { font-size: 14px; margin: 0; color: var(--ink-2); }
+
+  /* refs */
+  .refs { margin-top: 24px; }
+  .ref { padding: 12px 0; border-top: 1px solid var(--line-2); display: grid; grid-template-columns: 32px 1fr 80px; gap: 16px; font-size: 13px; }
+  .ref:last-child { border-bottom: 1px solid var(--line-2); }
+  .ref .n { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+  .ref a { color: var(--ink); text-decoration: none; border-bottom: 1px dotted var(--ink-3); }
+  .ref a:hover { color: var(--accent); border-color: var(--accent); }
+  .ref .src { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); text-align: right; }
+
+  /* hero specific */
+  .hero-meta {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+    border-top: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+    margin: 40px 0 0;
+  }
+  .hero-meta div { padding: 14px 0; border-right: 1px solid var(--line-2); padding-right: 16px; }
+  .hero-meta div:last-child { border-right: none; padding-right: 0; padding-left: 16px; }
+  .hero-meta .k { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 4px; }
+  .hero-meta .v { font-family: var(--serif); font-style: italic; font-size: 22px; color: var(--ink); line-height: 1.1; }
+
+  .scroll-hint {
+    position: absolute; left: 50%; bottom: 32px; transform: translateX(-50%);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--ink-3);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  .scroll-hint::after { content: ""; width: 1px; height: 24px; background: linear-gradient(to bottom, var(--ink-3), transparent); }
+  @keyframes pulse { 0%,100% { opacity: 0.6; } 50% { opacity: 1; } }
+
+  footer {
+    padding: 60px 64px 60px;
+    border-top: 1px solid var(--line-2);
+    display: flex; justify-content: space-between; gap: 24px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3);
+  }
+
+  /* mobile */
+  @media (max-width: 900px) {
+    .split { grid-template-columns: 1fr; }
+    .stage { position: relative; height: 52vh; border-right: none; border-bottom: 1px solid var(--line-2); top: 54px; }
+    .content { padding: 0 24px 80px; max-width: none; }
+    nav.index { display: none; }
+    .legend { right: 12px; top: 12px; }
+    .readout { left: 12px; bottom: 12px; max-width: 220px; }
+    .stage .marks { inset: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="dot"></span>
+    <b>Morte Encefálica</b>
+    <span class="desc">Estudo · Neuroanatomia · Doação</span>
+  </div>
+  <nav class="index" id="nav">
+    <a href="#inicio"      data-target="inicio"><span class="n">01</span>Início</a>
+    <a href="#definicao"   data-target="definicao"><span class="n">02</span>Definição</a>
+    <a href="#anatomia"    data-target="anatomia"><span class="n">03</span>Anatomia</a>
+    <a href="#diagnostico" data-target="diagnostico"><span class="n">04</span>Diagnóstico</a>
+    <a href="#protocolo"   data-target="protocolo"><span class="n">05</span>Protocolo</a>
+    <a href="#coma"        data-target="coma"><span class="n">06</span>Coma vs ME</a>
+    <a href="#doacao"      data-target="doacao"><span class="n">07</span>Doação</a>
+    <a href="#mitos"       data-target="mitos"><span class="n">08</span>Mitos</a>
+    <a href="#refs"        data-target="refs"><span class="n">09</span>Fontes</a>
+  </nav>
+</header>
+<div class="progress" id="progress"></div>
+
+<main>
+  <div class="split">
+    <!-- ===== LEFT: 3D BRAIN ===== -->
+    <div class="stage">
+      <div class="stage-inner">
+        <div id="brain-canvas"></div>
+        <div class="crosshair"></div>
+        <div class="marks">
+          <div class="tl">
+            <span class="v">SAG · COR · AXI</span>
+            <small>vista volumétrica</small>
+          </div>
+          <div class="tr">
+            <span class="v" id="rot-readout">θ 0.00°</span>
+            <small>rotação · arraste para girar</small>
+          </div>
+          <div class="bl">
+            <span class="v">ESCALA 1:1</span>
+            <small>1380 g · adulto</small>
+          </div>
+          <div class="br">
+            <span class="v">~86 bilhões</span>
+            <small>neurônios</small>
+          </div>
+        </div>
+
+        <div class="legend" id="legend">
+          <button data-r="frontal"><span class="sw" style="background:#76d3c4"></span>Frontal</button>
+          <button data-r="parietal"><span class="sw" style="background:#6fb8d4"></span>Parietal</button>
+          <button data-r="temporal"><span class="sw" style="background:#c9a273"></span>Temporal</button>
+          <button data-r="occipital"><span class="sw" style="background:#8a7fb8"></span>Occipital</button>
+          <button data-r="cerebelo"><span class="sw" style="background:#b87f8a"></span>Cerebelo</button>
+          <button data-r="tronco"><span class="sw" style="background:#d97757"></span>Tronco</button>
+        </div>
+
+        <div class="readout empty" id="readout">
+          <div class="tag">Região em foco</div>
+          <div class="name">passe o cursor sobre o cérebro</div>
+          <div class="desc">Clique em qualquer região para abrir sua descrição no painel lateral.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== RIGHT: CONTENT ===== -->
+    <div class="content">
+
+      <!-- HERO -->
+      <section class="s hero" id="inicio" data-region="" data-rot="0">
+        <div class="sec-tag"><span class="num">01 / Início</span><span class="line-d"></span><span>res. CFM 2.173/2017</span></div>
+        <h1>O fim do <em>encéfalo</em><br/>é o fim da vida.</h1>
+        <p class="lead">A morte encefálica é a cessação completa e irreversível das funções do cérebro, incluindo o tronco encefálico. Sob a luz da ventilação mecânica, o coração ainda pode bater — mas a pessoa não existe mais.</p>
+        <p>Esta página é um estudo sobre o que ela é, como é diagnosticada no Brasil, e por que ela é, ao mesmo tempo, um ponto final e o começo de outras vidas, por meio da doação de órgãos.</p>
+
+        <div class="hero-meta">
+          <div><div class="k">Critério legal</div><div class="v">CFM 2.173/2017</div></div>
+          <div><div class="k">Especificidade</div><div class="v">100%</div></div>
+          <div><div class="k">Equivale a</div><div class="v">óbito</div></div>
+        </div>
+      </section>
+
+      <!-- DEFINIÇÃO -->
+      <section class="s" id="definicao" data-region="" data-rot="0.4">
+        <div class="sec-tag"><span class="num">02 / Definição</span><span class="line-d"></span></div>
+        <h2>Quando o <em>encéfalo</em> para de existir.</h2>
+        <p>Em termos clínicos, a morte encefálica (ME) é a <strong>parada completa e irreversível das funções do encéfalo</strong>, o que inclui o córtex cerebral e o tronco encefálico — a estrutura que comanda respiração, reflexos e funções vitais.</p>
+        <p>Sem o tronco encefálico, não há respiração espontânea, não há reflexos, não há possibilidade de retorno. A persistência de batimentos cardíacos depende inteiramente do suporte da ventilação mecânica; sem ela, a parada cardiocirculatória sobrevém em horas a dias.</p>
+
+        <div class="pull">
+          “A perda completa e irreversível das funções encefálicas equivale à morte.”
+          <cite>— Resolução CFM nº 2.173, de 23 de novembro de 2017</cite>
+        </div>
+
+        <p>Do ponto de vista legal brasileiro, o diagnóstico de morte encefálica equivale ao óbito da pessoa, independentemente da parada cardíaca. O médico tem autoridade ética e legal para suspender o suporte terapêutico, exceto quando há doação de órgãos em andamento.</p>
+      </section>
+
+      <!-- ANATOMIA -->
+      <section class="s" id="anatomia" data-region="frontal" data-rot="0.9">
+        <div class="sec-tag"><span class="num">03 / Anatomia</span><span class="line-d"></span><span>interativo</span></div>
+        <h2>Seis regiões que <em>somam uma pessoa</em>.</h2>
+        <p>O encéfalo abriga cerca de <strong>86 bilhões de neurônios</strong>. A morte encefálica significa o silêncio de todos eles — córtex e tronco. Use o modelo ao lado para navegar pelas estruturas; cada região responde por um conjunto de funções que, em conjunto, são o que chamamos de consciência, identidade e vida vegetativa.</p>
+
+        <div class="region-block">
+          <div data-region-trigger="frontal"></div>
+          <h3>Lobo Frontal</h3>
+          <p>Funções executivas, raciocínio, tomada de decisão, controle motor voluntário, personalidade e linguagem expressiva. É a região mais associada à identidade — o "quem somos".</p>
+          <div data-region-trigger="parietal"></div>
+          <h3>Lobo Parietal</h3>
+          <p>Processamento de sensibilidade somática, percepção espacial, orientação corporal e integração de informações sensoriais.</p>
+          <div data-region-trigger="temporal"></div>
+          <h3>Lobo Temporal</h3>
+          <p>Audição, memória, compreensão da linguagem e reconhecimento de rostos e objetos. Sede de boa parte da memória episódica.</p>
+          <div data-region-trigger="occipital"></div>
+          <h3>Lobo Occipital</h3>
+          <p>Processamento visual primário. Recebe e interpreta a informação que chega dos olhos por meio do nervo óptico.</p>
+          <div data-region-trigger="cerebelo"></div>
+          <h3>Cerebelo</h3>
+          <p>Coordenação motora fina, equilíbrio, postura e aprendizagem de movimentos. Sob ele, o tronco encefálico.</p>
+          <div data-region-trigger="tronco"></div>
+          <h3>Tronco Encefálico</h3>
+          <p>O comando das funções vitais: respiração, frequência cardíaca, reflexos pupilar, corneano, vestíbulo-ocular e tosse. Sua ausência funcional é a marca clínica central da morte encefálica.</p>
+        </div>
+      </section>
+
+      <!-- DIAGNÓSTICO -->
+      <section class="s" id="diagnostico" data-region="tronco" data-rot="2.2">
+        <div class="sec-tag"><span class="num">04 / Diagnóstico</span><span class="line-d"></span><span>res. CFM 2.173/2017</span></div>
+        <h2>Quatro <em>pré-requisitos</em>. Nenhuma dúvida.</h2>
+        <p>A determinação de morte encefálica no Brasil é regida pela <strong>Resolução CFM nº 2.173/2017</strong>, que substituiu a norma vigente desde 1997. Em mais de 100 mil diagnósticos realizados sob a regra anterior, nenhum foi contestado — ainda assim, o protocolo foi atualizado para padronizar e aumentar a segurança.</p>
+        <p>Antes de iniciar qualquer exame, o paciente precisa apresentar simultaneamente todos os pré-requisitos abaixo. A ausência de um deles impede o início do protocolo.</p>
+
+        <div class="crit">
+          <div class="row"><span class="ix">01</span><div><b>Lesão encefálica conhecida e irreversível</b><span>Causa identificada e suficiente para justificar o quadro: trauma, AVC, anóxia, tumor primário, etc.</span></div></div>
+          <div class="row"><span class="ix">02</span><div><b>Ausência de fatores tratáveis</b><span>Sem distúrbios metabólicos, sem hipotermia (&lt; 35 °C) e sem efeito de drogas depressoras do SNC.</span></div></div>
+          <div class="row"><span class="ix">03</span><div><b>Tempo mínimo de observação</b><span>6 horas de tratamento e observação hospitalar (24 h em casos de encefalopatia hipóxico-isquêmica).</span></div></div>
+          <div class="row"><span class="ix">04</span><div><b>Condições fisiológicas adequadas</b><span>Temperatura corporal &gt; 35 °C, SatO₂ &gt; 94 % e pressão arterial sistólica em parâmetros definidos pela Resolução.</span></div></div>
+        </div>
+
+        <p>Atendidos todos os pré-requisitos, o protocolo segue com exames clínicos, teste de apneia e exame complementar. Veja o passo a passo na próxima seção.</p>
+      </section>
+
+      <!-- PROTOCOLO -->
+      <section class="s" id="protocolo" data-region="tronco" data-rot="3.0">
+        <div class="sec-tag"><span class="num">05 / Protocolo</span><span class="line-d"></span><span>etapas</span></div>
+        <h2>Como se <em>determina</em> a morte encefálica.</h2>
+        <p>Dois médicos capacitados, nenhum deles da equipe de transplantes. Um deles obrigatoriamente especialista em medicina intensiva, neurologia, neurocirurgia ou medicina de emergência. Cada etapa é registrada e documentada.</p>
+
+        <div class="steps">
+          <div class="step">
+            <div class="marker"><b>01</b>1º exame</div>
+            <div>
+              <h4>Exame clínico neurológico</h4>
+              <p>Coma não perceptivo e ausência de todos os reflexos do tronco encefálico — pupilar, córneo-palpebral, oculocefálico, vestíbulo-ocular, tosse.</p>
+              <div class="meta">1º médico capacitado · documentação no prontuário</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="marker"><b>02</b>2º exame</div>
+            <div>
+              <h4>Repetição do exame clínico</h4>
+              <p>Realizado por outro médico, com intervalo mínimo entre os exames que varia conforme a faixa etária. Mesmos achados, idêntico rigor.</p>
+              <div class="meta">2º médico, não pertencente à equipe de transplantes</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="marker"><b>03</b>Apneia</div>
+            <div>
+              <h4>Teste de apneia</h4>
+              <p>Desconexão controlada da ventilação mecânica após pré-oxigenação, observando se há esforço respiratório espontâneo quando o CO₂ arterial estimula ao máximo o centro respiratório no tronco encefálico.</p>
+              <div class="meta">Teste único · sine qua non da função do tronco</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="marker"><b>04</b>Complementar</div>
+            <div>
+              <h4>Exame complementar obrigatório</h4>
+              <p>Documentação inequívoca de ausência de perfusão sanguínea, atividade elétrica ou metabólica encefálica. Um dos seguintes: angiografia cerebral, eletroencefalograma, doppler transcraniano ou cintilografia.</p>
+              <div class="meta">Laudo por profissional capacitado e experiente</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="marker"><b>05</b>Declaração</div>
+            <div>
+              <h4>Termo de declaração de morte encefálica</h4>
+              <p>A data e hora do óbito são as do último procedimento que conclui a determinação. A família é comunicada e esclarecida em todas as etapas. O médico tem autoridade legal para suspender o suporte terapêutico — exceto se houver doação de órgãos em curso.</p>
+              <div class="meta">Equivalente jurídico ao óbito</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMA VS ME -->
+      <section class="s" id="coma" data-region="frontal" data-rot="3.8">
+        <div class="sec-tag"><span class="num">06 / Coma × Morte Encefálica</span><span class="line-d"></span></div>
+        <h2>Não é o mesmo <em>silêncio</em>.</h2>
+        <p>O coma é um estado de alteração profunda da consciência em que parte do encéfalo, principalmente o tronco, pode permanecer funcionante. Diferentemente da morte encefálica, do coma é possível, em alguns casos, sair.</p>
+
+        <div class="compare">
+          <div class="h"></div>
+          <div class="h coma">Coma</div>
+          <div class="h me">Morte Encefálica</div>
+
+          <div class="c"><b>Atividade encefálica</b></div>
+          <div class="c">Reduzida, mas presente</div>
+          <div class="c">Ausente e irreversível</div>
+
+          <div class="c"><b>Tronco encefálico</b></div>
+          <div class="c">Funcionante, ao menos parcialmente</div>
+          <div class="c">Funções abolidas</div>
+
+          <div class="c"><b>Respiração espontânea</b></div>
+          <div class="c">Pode estar presente</div>
+          <div class="c">Ausente; depende de ventilação</div>
+
+          <div class="c"><b>Reflexos de tronco</b></div>
+          <div class="c">Geralmente presentes</div>
+          <div class="c">Todos abolidos</div>
+
+          <div class="c"><b>Reversibilidade</b></div>
+          <div class="c">Possível em alguns casos</div>
+          <div class="c">Nenhuma</div>
+
+          <div class="c"><b>Status legal</b></div>
+          <div class="c">Vivo</div>
+          <div class="c">Óbito</div>
+        </div>
+
+        <p>Por isso o protocolo é tão rigoroso: ele precisa <strong>excluir todas as causas tratáveis</strong> de inconsciência antes de afirmar que estamos diante de uma morte, e não de um coma profundo.</p>
+      </section>
+
+      <!-- DOAÇÃO -->
+      <section class="s" id="doacao" data-region="" data-rot="4.6">
+        <div class="sec-tag"><span class="num">07 / Doação</span><span class="line-d"></span><span>dados MS/ABTO · 2024</span></div>
+        <h2>O outro lado do <em>diagnóstico</em>.</h2>
+        <p>O Brasil opera o maior programa público de transplantes do mundo e é o segundo maior transplantador em números absolutos, atrás apenas dos Estados Unidos. Em 2024, mais de <strong>30 mil procedimentos</strong> foram realizados pelo SUS — recorde histórico, 18 % acima de 2022.</p>
+
+        <div class="grid-2">
+          <div class="card"><div class="ic"><div class="num-big">78<span style="font-size:.5em;color:var(--ink-3);"> mil</span></div><div class="lbl">na fila</div></div><p>pessoas aguardam por um órgão no Brasil — rim, córnea e fígado lideram a demanda.</p></div>
+          <div class="card"><div class="ic"><div class="num-big good">+30k</div><div class="lbl">transplantes 2024</div></div><p>recorde histórico no SUS — +18 % vs. 2022, com córnea, rim, medula óssea e fígado mais frequentes.</p></div>
+          <div class="card"><div class="ic"><div class="num-big warn">45%</div><div class="lbl">recusa familiar</div></div><p>das famílias entrevistadas em 2024 não autorizaram a doação. Na Espanha, esse índice fica entre 8 % e 10 %.</p></div>
+          <div class="card"><div class="ic"><div class="num-big">2º</div><div class="lbl">no mundo</div></div><p>Brasil em número absoluto de transplantes; 3º em doações, atrás de EUA e China.</p></div>
+        </div>
+
+        <h3>Como funciona a doação após morte encefálica</h3>
+        <ol>
+          <li>O diagnóstico de ME é concluído pelo protocolo da Resolução CFM 2.173/2017.</li>
+          <li>A Central Estadual de Transplantes e a CIHDOTT são notificadas em três momentos do protocolo.</li>
+          <li>A família é esclarecida sobre a morte e, em seguida, consultada sobre a doação. <strong>Sem autorização familiar, não há retirada.</strong></li>
+          <li>Critérios técnicos (compatibilidade, gravidade, ordem cronológica) determinam quem receberá cada órgão. A lista é única e válida para SUS e rede privada.</li>
+        </ol>
+
+        <div class="pull">
+          “A taxa de doadores efetivos no Brasil é de cerca de 20 pmp — um terço do que seria necessário para atender a demanda. A Espanha alcança 46,3 pmp.”
+          <cite>— ABTO · Registro Brasileiro de Transplantes · Min. da Saúde, 2024</cite>
+        </div>
+
+        <p>Um único doador pode beneficiar até oito pessoas com órgãos sólidos (coração, fígado, pulmões, rins, pâncreas, intestino) e dezenas com tecidos (córneas, ossos, pele). Em todos os casos, a viabilidade dos órgãos depende da manutenção clínica do doador na UTI até a retirada.</p>
+      </section>
+
+      <!-- MITOS -->
+      <section class="s" id="mitos" data-region="" data-rot="5.5">
+        <div class="sec-tag"><span class="num">08 / Mitos &amp; Verdades</span><span class="line-d"></span></div>
+        <h2>O que <em>se diz</em>, e o que se sabe.</h2>
+
+        <div class="myths">
+          <div class="myth">
+            <div class="v mito">Mito</div>
+            <div><q>Quem tem morte encefálica ainda pode acordar.</q><p>Não. A morte encefálica é, por definição, a parada irreversível de todas as funções do encéfalo. Não há retorno — é distinta do coma.</p></div>
+          </div>
+          <div class="myth">
+            <div class="v mito">Mito</div>
+            <div><q>Os médicos correm para diagnosticar para conseguir órgãos.</q><p>O protocolo é independente do interesse em transplante. Nenhum dos dois médicos pode pertencer à equipe de captação ou transplante. A decisão é obrigatória em todo paciente em coma não perceptivo, doador ou não.</p></div>
+          </div>
+          <div class="myth">
+            <div class="v mito">Mito</div>
+            <div><q>Doar órgãos desfigura o corpo.</q><p>A retirada é um procedimento cirúrgico padrão. O corpo é entregue à família em condições compatíveis com velório e cerimônia fúnebre.</p></div>
+          </div>
+          <div class="myth">
+            <div class="v fato">Fato</div>
+            <div><q>A família precisa autorizar a doação.</q><p>Sim. No Brasil, mesmo que a pessoa tenha manifestado o desejo em vida, é a família quem autoriza formalmente. Conversar com sua família é o passo mais importante.</p></div>
+          </div>
+          <div class="myth">
+            <div class="v fato">Fato</div>
+            <div><q>O Brasil tem um dos maiores programas públicos de transplante do mundo.</q><p>Coordenado pelo Sistema Nacional de Transplantes e financiado em ~88 % pelo SUS, com 728 estabelecimentos habilitados.</p></div>
+          </div>
+          <div class="myth">
+            <div class="v fato">Fato</div>
+            <div><q>A lista de espera é única e técnica.</q><p>Tipagem sanguínea, compatibilidade, gravidade clínica e ordem cronológica de cadastro definem a posição na fila — não há privilégio por classe social.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- REFS -->
+      <section class="s" id="refs" data-region="" data-rot="6.0">
+        <div class="sec-tag"><span class="num">09 / Fontes</span><span class="line-d"></span></div>
+        <h2>Sobre o que <em>se apoia</em> esta página.</h2>
+        <p>Todo o material apresentado parte de fontes oficiais e literatura médica revisada. Onde aparece um número, há uma referência.</p>
+
+        <div class="refs">
+          <div class="ref"><span class="n">[1]</span><span><a href="https://saude.rs.gov.br/upload/arquivos/carga20171205/19140504-resolucao-do-conselho-federal-de-medicina-2173-2017.pdf" target="_blank" rel="noopener">Conselho Federal de Medicina. Resolução CFM nº 2.173, de 23 de novembro de 2017.</a> Define os critérios de diagnóstico de morte encefálica.</span><span class="src">CFM</span></div>
+          <div class="ref"><span class="n">[2]</span><span><a href="https://portal.cfm.org.br/noticias/cfm-atualiza-resolucao-com-criterios-de-diagnostico-da-morte-encefalica/" target="_blank" rel="noopener">CFM atualiza resolução com critérios de diagnóstico da morte encefálica.</a> Portal CFM, 2017.</span><span class="src">CFM</span></div>
+          <div class="ref"><span class="n">[3]</span><span><a href="https://www.gov.br/saude/pt-br/assuntos/noticias/2025/junho/brasil-bate-recorde-de-transplantes-e-anuncia-medidas-para-modernizar-sistema-e-aumentar-doacoes" target="_blank" rel="noopener">Brasil bate recorde de transplantes em 2024.</a> Ministério da Saúde, jun. 2025.</span><span class="src">MS</span></div>
+          <div class="ref"><span class="n">[4]</span><span><a href="https://site.abto.org.br/wp-content/uploads/2024/03/RBT_2023-Populacao_Site.pdf" target="_blank" rel="noopener">Registro Brasileiro de Transplantes (RBT) 2023.</a> Associação Brasileira de Transplante de Órgãos.</span><span class="src">ABTO</span></div>
+          <div class="ref"><span class="n">[5]</span><span><a href="https://www.neurology.org/doi/10.1212/WNL.0000000000207740" target="_blank" rel="noopener">Greer DM et al. Pediatric and Adult Brain Death/Death by Neurologic Criteria Consensus Practice Guideline.</a> Neurology, 2023.</span><span class="src">AAN</span></div>
+          <div class="ref"><span class="n">[6]</span><span><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2824942/" target="_blank" rel="noopener">Machado C. Brain death diagnosis and apnea test safety.</a> Ann Indian Acad Neurol, 2009.</span><span class="src">NIH</span></div>
+          <div class="ref"><span class="n">[7]</span><span><a href="https://www.tadeclinicagem.com.br/guia/440/diagnostico-de-morte-encefalica/" target="_blank" rel="noopener">Critérios para Diagnóstico de Morte Encefálica.</a> Tá de Clinicagem, revisão 2025.</span><span class="src">Rev</span></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <footer>
+    <div>Trabalho acadêmico · 2026</div>
+    <div>conteúdo educativo · não substitui parecer médico</div>
+  </footer>
+</main>
+
+<!-- Three.js -->
+<script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+<script src="brain.js"></script>
+<script>
+(function () {
+  const REGIONS = window.BrainViz.REGIONS;
+  const REGION_DESC = {
+    frontal: 'Funções executivas, raciocínio, personalidade, motor voluntário e linguagem expressiva.',
+    parietal: 'Sensibilidade somática, percepção espacial e integração sensorial.',
+    temporal: 'Audição, memória e compreensão da linguagem; reconhecimento de rostos e objetos.',
+    occipital: 'Processamento visual primário — interpretação da informação dos olhos.',
+    cerebelo: 'Coordenação motora, equilíbrio, postura e aprendizagem de movimentos.',
+    tronco: 'Comando das funções vitais: respiração, frequência cardíaca e reflexos. Seu silêncio é o achado central da morte encefálica.',
+  };
+
+  const stage = document.getElementById('brain-canvas');
+  const brain = window.BrainViz.mount(stage);
+  const readout = document.getElementById('readout');
+  const rotOut = document.getElementById('rot-readout');
+  const legendBtns = [...document.querySelectorAll('.legend button')];
+
+  function setReadout(r) {
+    if (!r) {
+      readout.classList.add('empty');
+      readout.querySelector('.name').textContent = 'passe o cursor sobre o cérebro';
+      readout.querySelector('.desc').textContent = 'Clique em qualquer região para abrir sua descrição no painel lateral.';
+      return;
+    }
+    readout.classList.remove('empty');
+    readout.querySelector('.name').textContent = REGIONS[r].label;
+    readout.querySelector('.desc').textContent = REGION_DESC[r] || '';
+    legendBtns.forEach(b => b.classList.toggle('active', b.dataset.r === r));
+  }
+
+  brain.on('hover', (r) => {
+    if (r) setReadout(r);
+  });
+  brain.on('click', (r) => {
+    brain.setRegion(r);
+    setReadout(r);
+    // scroll to the matching subsection if exists, else "anatomia"
+    document.getElementById('anatomia').scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  legendBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const r = btn.dataset.r;
+      brain.setRegion(r);
+      setReadout(r);
+    });
+    btn.addEventListener('mouseenter', () => setReadout(btn.dataset.r));
+  });
+
+  // ====== scroll: drive rotation + active section + region ======
+  const sections = [...document.querySelectorAll('section.s')];
+  const navLinks = [...document.querySelectorAll('#nav a')];
+  const progress = document.getElementById('progress');
+
+  function update() {
+    const scrollY = window.scrollY;
+    const dh = document.documentElement.scrollHeight - window.innerHeight;
+    const p = Math.max(0, Math.min(1, scrollY / dh));
+    progress.style.width = (p * 100) + '%';
+
+    // find current section: the one closest to top + 25%
+    const probe = window.innerHeight * 0.35 + scrollY;
+    let current = sections[0];
+    let nextIdx = 0;
+    for (let i = 0; i < sections.length; i++) {
+      const top = sections[i].offsetTop + sections[i].offsetParent.offsetTop;
+      if (top <= probe) { current = sections[i]; nextIdx = i; }
+    }
+    const next = sections[Math.min(nextIdx + 1, sections.length - 1)];
+    const curTop = current.offsetTop + current.offsetParent.offsetTop;
+    const nextTop = next.offsetTop + next.offsetParent.offsetTop;
+    const segLen = Math.max(1, nextTop - curTop);
+    const segP = Math.max(0, Math.min(1, (probe - curTop) / segLen));
+
+    const r1 = parseFloat(current.dataset.rot || '0');
+    const r2 = parseFloat(next.dataset.rot || '0');
+    const rotY = r1 + (r2 - r1) * segP;
+    brain.setRotation(rotY, -0.06);
+    rotOut.textContent = 'θ ' + (rotY * 57.2958).toFixed(1) + '°';
+
+    // region: use current section's data-region if set, else clear
+    const reg = current.dataset.region || '';
+    brain.setRegion(reg || null);
+    setReadout(reg || null);
+
+    navLinks.forEach(a => a.classList.toggle('active', a.dataset.target === current.id));
+  }
+
+  // nav click scroll
+  navLinks.forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const el = document.getElementById(a.dataset.target);
+      window.scrollTo({ top: el.offsetTop + el.offsetParent.offsetTop - 50, behavior: 'smooth' });
+    });
+  });
+
+  // sub-region triggers within anatomia: as they enter viewport, set region
+  const triggers = [...document.querySelectorAll('[data-region-trigger]')];
+  const io = new IntersectionObserver((entries) => {
+    // pick the topmost intersecting trigger
+    let topY = Infinity;
+    let topReg = null;
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        const r = en.boundingClientRect.top;
+        if (r < topY) { topY = r; topReg = en.target.dataset.regionTrigger; }
+      }
+    });
+    if (topReg) {
+      brain.setRegion(topReg);
+      setReadout(topReg);
+    }
+  }, { rootMargin: '-30% 0px -55% 0px', threshold: 0 });
+  triggers.forEach(t => io.observe(t));
+
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+})();
+</script>
+</body>
+</html>
