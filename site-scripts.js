@@ -40,6 +40,18 @@
   window.addEventListener('resize', updateNav);
   updateNav();
 
+  // ===== HAMBURGER MENU =====
+  const hamburger = document.querySelector('.hamburger');
+  const mobileMenu = document.querySelector('.mobile-menu');
+
+  if (hamburger && mobileMenu) {
+    hamburger.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburger.classList.toggle('open');
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+  }
+
   // Smooth scroll for nav links
   document.querySelectorAll('.nav-link[data-target]').forEach(a => {
     a.addEventListener('click', (e) => {
@@ -54,18 +66,6 @@
       document.body.style.overflow = '';
     });
   });
-
-  // ===== HAMBURGER MENU =====
-  const hamburger = document.querySelector('.hamburger');
-  const mobileMenu = document.querySelector('.mobile-menu');
-
-  if (hamburger && mobileMenu) {
-    hamburger.addEventListener('click', () => {
-      const isOpen = mobileMenu.classList.toggle('open');
-      hamburger.classList.toggle('open');
-      document.body.style.overflow = isOpen ? 'hidden' : '';
-    });
-  }
 
   // ===== HERO BRAIN =====
   const REGIONS = window.BrainViz ? window.BrainViz.REGIONS : {};
