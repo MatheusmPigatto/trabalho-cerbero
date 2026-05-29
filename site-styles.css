@@ -846,3 +846,165 @@ details[open] .faq-icon { transform: rotate(45deg); background: var(--accent); c
   .hero-content { padding: 40px 20px; }
   .step-item { grid-template-columns: 56px 1fr; gap: 16px; }
 }
+
+/* ========================================
+   VIDEO CAROUSEL (horizontal scroll)
+   ======================================== */
+.video-carousel {
+  position: relative;
+  margin-top: 48px;
+}
+
+.vc-track {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scroll-padding-left: 4px;
+  padding: 4px 4px 24px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Custom scrollbar (track sits on a dark section) */
+.vc-track::-webkit-scrollbar { height: 8px; }
+.vc-track::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.06);
+  border-radius: 99px;
+}
+.vc-track::-webkit-scrollbar-thumb {
+  background: rgba(167,139,250,0.5);
+  border-radius: 99px;
+}
+.vc-track::-webkit-scrollbar-thumb:hover { background: rgba(167,139,250,0.8); }
+.vc-track { scrollbar-width: thin; scrollbar-color: rgba(167,139,250,0.5) rgba(255,255,255,0.06); }
+
+.vc-card {
+  flex: 0 0 clamp(280px, 72vw, 560px);
+  scroll-snap-align: start;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 12px;
+  transition: transform .35s ease, border-color .35s ease, background .35s ease;
+}
+.vc-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(167,139,250,0.45);
+  background: rgba(255,255,255,0.06);
+}
+
+/* Facade: thumbnail + play button before the iframe loads */
+.vc-facade {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  padding: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #0b0820;
+}
+.vc-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .5s ease, opacity .3s ease;
+}
+.vc-facade::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15,10,42,0) 40%, rgba(15,10,42,0.55) 100%);
+  opacity: .7;
+  transition: opacity .3s ease;
+}
+.vc-card:hover .vc-thumb { transform: scale(1.05); }
+.vc-card:hover .vc-facade::after { opacity: .45; }
+
+.vc-play {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 64px; height: 64px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(124,58,237,0.92);
+  box-shadow: 0 8px 28px rgba(124,58,237,0.45);
+  transition: transform .25s ease, background .25s ease;
+  padding-left: 3px;
+}
+.vc-facade:hover .vc-play,
+.vc-facade:focus-visible .vc-play {
+  transform: translate(-50%, -50%) scale(1.1);
+  background: var(--accent);
+}
+.vc-facade:focus-visible { outline: 2px solid var(--accent-light); outline-offset: 3px; }
+
+/* Iframe that replaces the facade on click */
+.vc-card .vc-frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 10px;
+  display: block;
+}
+
+.vc-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 14px 6px 4px;
+}
+.vc-num {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  color: var(--accent-light);
+}
+.vc-card-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-inv);
+  margin: 0;
+}
+
+/* Arrow controls */
+.vc-arrow {
+  position: absolute;
+  top: calc(50% - 28px);
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 48px; height: 48px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(26,17,69,0.85);
+  color: var(--text-inv);
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: background .25s ease, transform .25s ease, opacity .25s ease, border-color .25s ease;
+}
+.vc-arrow:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-50%) scale(1.08);
+}
+.vc-arrow:disabled { opacity: 0; pointer-events: none; }
+.vc-arrow--prev { left: -18px; }
+.vc-arrow--next { right: -18px; }
+
+@media (max-width: 1024px) {
+  .vc-arrow--prev { left: 4px; }
+  .vc-arrow--next { right: 4px; }
+}
+@media (max-width: 640px) {
+  .video-carousel { margin-top: 32px; }
+  .vc-arrow { display: none; }
+  .vc-card { flex-basis: 82vw; }
+}

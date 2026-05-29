@@ -152,4 +152,64 @@
     }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
     fadeEls.forEach(el => fadeObs.observe(el));
   }
+
+  // ===== VIDEO CAROUSEL =====
+  const carousel = document.querySelector('.video-carousel');
+  if (carousel) {
+    const track = carousel.querySelector('.vc-track');
+    const prevBtn = carousel.querySelector('.vc-arrow--prev');
+    const nextBtn = carousel.querySelector('.vc-arrow--next');
+
+    // Thumbnail fallback (maxresdefault is missing for some videos)
+    track.querySelectorAll('.vc-thumb').forEach(img => {
+      img.addEventListener('error', function onErr() {
+        const fb = img.getAttribute('data-fallback');
+        if (fb && img.src !== fb) { img.src = fb; }
+        img.removeEventListener('error', onErr);
+      });
+    });
+
+    // Click facade -> load the YouTube player in place
+    track.querySelectorAll('.vc-facade').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.vc-card');
+        const id = card.getAttribute('data-video-id');
+        const title = card.getAttribute('data-title') || 'Vídeo';
+        const iframe = document.createElement('iframe');
+        iframe.className = 'vc-frame';
+        iframe.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+        iframe.title = title;
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.allowFullscreen = true;
+        btn.replaceWith(iframe);
+      });
+    });
+
+    // Arrow scrolling — one card-width (incl. gap) per click
+    function scrollByCard(dir) {
+      const card = track.querySelector('.vc-card');
+      const gap = parseInt(getComputedStyle(track).columnGap || getComputedStyle(track).gap || '24', 10) || 24;
+      const step = card ? card.offsetWidth + gap : track.clientWidth * 0.8;
+      track.scrollBy({ left: dir * step, behavior: 'smooth' });
+    }
+    if (prevBtn) prevBtn.addEventListener('click', () => scrollByCard(-1));
+    if (nextBtn) nextBtn.addEventListener('click', () => scrollByCard(1));
+
+    // Toggle arrow availability at the ends of the track
+    function updateArrows() {
+      const max = track.scrollWidth - track.clientWidth - 1;
+      const overflowing = max > 4;
+      if (prevBtn) {
+        prevBtn.hidden = !overflowing;
+        prevBtn.disabled = track.scrollLeft <= 1;
+      }
+      if (nextBtn) {
+        nextBtn.hidden = !overflowing;
+        nextBtn.disabled = track.scrollLeft >= max;
+      }
+    }
+    track.addEventListener('scroll', updateArrows, { passive: true });
+    window.addEventListener('resize', updateArrows);
+    updateArrows();
+  }
 })();
